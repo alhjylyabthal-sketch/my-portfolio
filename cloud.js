@@ -6,7 +6,8 @@ const status=t=>$('cloudStatus').textContent=t;
 const saveCfg=()=>localStorage.setItem('engaz-cloud-config',JSON.stringify({url:$('projectUrl').value.trim(),key:$('publicKey').value.trim()}));
 async function init(){
  const url=$('projectUrl').value.trim(),key=$('publicKey').value.trim();
- if(!/^https:\/\/[a-z0-9-]+\.supabase\.co\/?$/i.test(url)||!key){status('تحققي من رابط المشروع والمفتاح العام.');return}
+ if(!/^https:\/\/[a-z0-9-]+\.supabase\.co\/?$/i.test(url)||!key){client=null;status('تحققي من رابط المشروع والمفتاح العام.');return}
+ status('جارٍ تجهيز الاتصال السحابي...');
  try{
   const {createClient}=await import('https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm');
   client=createClient(url,key,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
@@ -21,8 +22,24 @@ async function setUser(u){
  status(u?'متصلة بحساب: '+u.email:'المشروع مربوط. سجلي الدخول للبدء.');
 }
 $('connectCloud').onclick=init;
-$('signIn').onclick=async()=>{if(!client)return;const {error}=await client.auth.signInWithPassword({email:$('loginEmail').value.trim(),password:$('loginPassword').value});status(error?'تعذر الدخول: '+error.message:'تم تسجيل الدخول')};
-$('signUp').onclick=async()=>{if(!client)return;const {error}=await client.auth.signUp({email:$('loginEmail').value.trim(),password:$('loginPassword').value});status(error?'تعذر إنشاء الحساب: '+error.message:'تحققي من بريدك لتأكيد الحساب ثم سجلي الدخول.');};
+// Show validation and network errors rather than silently ignoring taps.
+async function authAction(mode){
+ const email=$('loginEmail').value.trim(), password=$('loginPassword').value;
+ if(!client){status('الاتصال غير جاهز. اضغطي ربط المشروع وانتظري رسالة نجاح الاتصال.');return;}
+ if(!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){status('اكتبي بريدًا إلكترونيًا صحيحًا.');return;}
+ if(!password || (mode==='signup' && password.length<8)){status('اكتبي كلمة مرور من 8 أحرف على الأقل.');return;}
+ const btn=$(mode==='signup'?'signUp':'signIn');
+ btn.disabled=true;status('جارٍ التواصل مع Supabase، انتظري قليلًا...');
+ try{
+  const {data,error}=mode==='signup' ? await client.auth.signUp({email,password}) : await client.auth.signInWithPassword({email,password});
+  if(error){status('تعذر إكمال العملية: '+error.message);return;}
+  if(mode==='signup')status(data?.session?'تم إنشاء الحساب وتسجيل الدخول.':'تم إرسال طلب التسجيل. افتحي بريدك لتأكيد الحساب إذا وصلتك رسالة.');
+  else status('تم تسجيل الدخول بنجاح.');
+ }catch(e){status('تعذر الاتصال بالخدمة: '+(e?.message||'خطأ غير معروف'));}
+ finally{btn.disabled=false;}
+}
+$('signIn').onclick=()=>authAction('signin');
+$('signUp').onclick=()=>authAction('signup');
 $('signOut').onclick=async()=>{await client?.auth.signOut();status('تم تسجيل الخروج')};
 function idb(){return new Promise((resolve,reject)=>{const r=indexedDB.open('engaz-v2',1);r.onsuccess=()=>resolve(r.result);r.onerror=()=>reject(r.error)})}
 async function localEntries(){const db=await idb();return new Promise((resolve,reject)=>{const r=db.transaction('entries').objectStore('entries').getAll();r.onsuccess=()=>resolve(r.result);r.onerror=()=>reject(r.error)})}
