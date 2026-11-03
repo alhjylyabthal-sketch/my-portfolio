@@ -20,6 +20,7 @@ async function setUser(u){
  user=u;hide('cloudActions',!u);hide('signOut',!u);
  hide('signIn',!!u);hide('signUp',!!u);hide('loginEmail',!!u);hide('loginPassword',!!u);
  status(u?'متصلة بحساب: '+u.email:'المشروع مربوط. سجلي الدخول للبدء.');
+ if(u)await refreshSafeWitnesses();
 }
 $('connectCloud').onclick=init;
 // Show validation and network errors rather than silently ignoring taps.
@@ -32,7 +33,7 @@ async function authAction(mode){
  btn.disabled=true;status('جارٍ التواصل مع Supabase، انتظري قليلًا...');
  try{
   const {data,error}=mode==='signup' ? await client.auth.signUp({email,password}) : await client.auth.signInWithPassword({email,password});
-  if(error){status('تعذر إكمال العملية: '+error.message);return;}
+  if(error){const msg=/email not confirmed/i.test(error.message)?'الحساب يحتاج تأكيد البريد الإلكتروني. افتحي رسالة التأكيد أولًا.':/invalid login credentials/i.test(error.message)?'بيانات الدخول غير صحيحة. تأكدي من البريد وكلمة المرور، أو استخدمي رابط استعادة كلمة المرور من Supabase.':error.message;status('تعذر إكمال العملية: '+msg);return;}
   if(mode==='signup')status(data?.session?'تم إنشاء الحساب وتسجيل الدخول.':'تم إرسال طلب التسجيل. افتحي بريدك لتأكيد الحساب إذا وصلتك رسالة.');
   else status('تم تسجيل الدخول بنجاح.');
  }catch(e){status('تعذر الاتصال بالخدمة: '+(e?.message||'خطأ غير معروف'));}
@@ -45,24 +46,102 @@ function idb(){return new Promise((resolve,reject)=>{const r=indexedDB.open('eng
 async function localEntries(){const db=await idb();return new Promise((resolve,reject)=>{const r=db.transaction('entries').objectStore('entries').getAll();r.onsuccess=()=>resolve(r.result);r.onerror=()=>reject(r.error)})}
 async function localPut(e){const db=await idb();return new Promise((resolve,reject)=>{const r=db.transaction('entries','readwrite').objectStore('entries').put(e);r.onsuccess=()=>resolve();r.onerror=()=>reject(r.error)})}
 function validId(s){return /^[a-z0-9-]{1,80}$/i.test(s)}
-$('uploadCloud').onclick=async()=>{
- if(!user)return;const entries=await localEntries();
- if(!confirm(`رفع ${entries.length} شاهد إلى حسابك؟ ستستبدل الشواهد ذات المعرف نفسه على السحابة.`))return;
- $('uploadCloud').disabled=true;
+// Safe-by-default single-record cloud test. Never upload photos/attachments here.
+const cloudUploadButton=$('uploadCloud');
+cloudUploadButton.textContent='☁️ رفع الشاهد المختار فقط';
+const witnessPanel=document.createElement('div');
+witnessPanel.id='safeWitnessPanel';
+witnessPanel.style.margin='14px 0 8px';
+const witnessLabel=document.createElement('label');
+witnessLabel.htmlFor='safeWitnessSelect';
+witnessLabel.textContent='اختاري شاهدًا نصيًا واحدًا (بدون صور أو ملفات)';
+const witnessSelect=document.createElement('select');
+witnessSelect.id='safeWitnessSelect';
+witnessSelect.setAttribute('aria-label','الشاهد النصي المطلوب رفعه إلى السحابة');
+const witnessNote=document.createElement('p');
+witnessNote.className='muted';
+witnessNote.textContent='الصور ومقاطع الفيديو مستبعدة تلقائيًا من هذه القائمة ولن تُرفع. اختاري «اختبار الحفظ السحابي» للتجربة.';
+witnessPanel.append(witnessLabel,witnessSelect,witnessNote);
+cloudUploadButton.parentElement.before(witnessPanel);
+let eligibleWitnesses=[];
+async function refreshSafeWitnesses(){
+ const selected=witnessSelect.value;
  try{
-  for(const e of entries){
-   if(!validId(e.id))throw Error('معرف شاهد غير صالح');
-   const fileInfo=[];
-   for(let i=0;i<(e.files||[]).length;i++){
-    const f=e.files[i],path=`${user.id}/${e.id}/${i}-${crypto.randomUUID()}`;
-    const {error}=await client.storage.from('evidence').upload(path,f.blob,{contentType:f.type||'application/octet-stream'});
-    if(error)throw error;fileInfo.push({name:f.name,type:f.type,path});
-   }
-   const {error}=await client.from('evidence_entries').upsert({id:e.id,user_id:user.id,title:e.title,date:e.date||null,description:e.desc||'',impact:e.impact||'',bands:e.bands,files:fileInfo,created_at:new Date(e.created||Date.now()).toISOString()});
-   if(error)throw error;
+  eligibleWitnesses=(await localEntries()).filter(e=>e&&validId(e.id)&&Array.isArray(e.files)&&e.files.length===0);
+  eligibleWitnesses.sort((a,b)=>(b.created||0)-(a.created||0));
+  witnessSelect.replaceChildren();
+  const placeholder=document.createElement('option');
+  placeholder.value='';
+  placeholder.textContent=eligibleWitnesses.length?'— اختاري شاهدًا واحدًا —':'لا توجد شواهد نصية بدون مرفقات';
+  witnessSelect.append(placeholder);
+  for(const e of eligibleWitnesses){
+   const opt=document.createElement('option');
+   opt.value=e.id; opt.textContent=e.title||'شاهد بلا عنوان';
+   witnessSelect.append(opt);
   }
-  status(`تم رفع ${entries.length} شاهد بنجاح.`);
- }catch(e){status('تعذر إكمال الرفع: '+e.message)}finally{$('uploadCloud').disabled=false}
+  witnessSelect.value=eligibleWitnesses.some(e=>e.id===selected)?selected:
+    eligibleWitnesses.length===1?eligibleWitnesses[0].id:'';
+  cloudUploadButton.disabled=eligibleWitnesses.length===0;
+ }catch(e){
+  cloudUploadButton.disabled=true;
+  status('تعذرت قراءة الشواهد المحلية: '+(e?.message||'خطأ غير معروف'));
+ }
+}
+witnessSelect.addEventListener('focus',()=>refreshSafeWitnesses());
+cloudUploadButton.onclick=async()=>{
+ if(!client||!user){status('سجلي الدخول أولًا.');return;}
+ const wantedId=witnessSelect.value;
+ await refreshSafeWitnesses();
+ const e=eligibleWitnesses.find(x=>x.id===wantedId);
+ if(!e){status('اختاري شاهدًا نصيًا من القائمة أولًا.');return;}
+ if(!Array.isArray(e.files)||e.files.length!==0){status('لم يتم الرفع: هذا الشاهد يحتوي على مرفقات.');return;}
+ if(!confirm('رفع شاهد واحد فقط إلى السحابة: «'+(e.title||'بدون عنوان')+'»؟ لن تُرفع أي صور أو ملفات.'))return;
+ cloudUploadButton.disabled=true;
+ try{
+  const row={
+   id:e.id,user_id:user.id,title:e.title||'شاهد تجريبي',date:e.date||null,
+   description:e.desc||'',impact:e.impact||'',bands:Array.isArray(e.bands)?e.bands:[],
+   files:[],created_at:new Date(e.created||Date.now()).toISOString()
+  };
+  const {data,error}=await client.from('evidence_entries').upsert(row,{onConflict:'id'}).select('id,user_id,title,files').single();
+  if(error)throw error;
+  if(data?.id!==e.id||data.user_id!==user.id||data.title!==row.title||!Array.isArray(data.files)||data.files.length!==0)
+   throw Error('لم نستطع تأكيد حفظ الشاهد.');
+  status('✅ تم رفع الشاهد النصي «'+row.title+'» والتحقق من حفظه سحابيًا. لم تُرفع أي صور.');
+ }catch(err){status('تعذر الرفع السحابي: '+(err?.message||'خطأ غير معروف'))}
+ finally{cloudUploadButton.disabled=false;}
+};
+
+// Let the signed-in owner set a password after signing in via the recovery link.
+const passwordPanel=document.createElement('div');
+passwordPanel.style.marginTop='16px';
+const passwordLabel=document.createElement('label');
+passwordLabel.htmlFor='newEngazPassword';
+passwordLabel.textContent='تعيين كلمة مرور جديدة للدخول لاحقًا (اختياري)';
+const passwordInput=document.createElement('input');
+passwordInput.id='newEngazPassword';passwordInput.type='password';
+passwordInput.autocomplete='new-password';passwordInput.minLength=12;
+passwordInput.placeholder='12 خانة: حرف كبير وصغير ورقم ورمز';
+const passwordButton=document.createElement('button');
+passwordButton.type='button';passwordButton.className='alt';
+passwordButton.textContent='حفظ كلمة المرور الجديدة';
+passwordButton.style.marginTop='8px';
+passwordPanel.append(passwordLabel,passwordInput,passwordButton);
+$('cloudActions').append(passwordPanel);
+passwordButton.onclick=async()=>{
+ if(!client||!user){status('سجلي الدخول أولًا.');return;}
+ const pw=passwordInput.value;
+ if(pw.length<12||!/[a-z]/.test(pw)||!/[A-Z]/.test(pw)||!/[0-9]/.test(pw)||!/[!@#$%^&*()_+\-=[\]{};:'"\|,.<>/?`~]/.test(pw)){
+  status('اختاري كلمة مرور من 12 خانة على الأقل، فيها حرف إنجليزي كبير وصغير ورقم ورمز.');return;
+ }
+ passwordButton.disabled=true;
+ try{
+  const {error}=await client.auth.updateUser({password:pw});
+  if(error)throw error;
+  passwordInput.value='';
+  status('✅ تم تحديث كلمة مرور إنجاز. احتفظي بها في مدير كلمات المرور بجوالك.');
+ }catch(e){status('تعذر تحديث كلمة المرور: '+(e?.message||'خطأ غير معروف'))}
+ finally{passwordButton.disabled=false;}
 };
 $('downloadCloud').onclick=async()=>{
  if(!user)return;
