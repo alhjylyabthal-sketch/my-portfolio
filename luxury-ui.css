@@ -64,11 +64,11 @@ body.lux-mode .lux-count{font-weight:bold;color:#8e662b;font-size:13px;margin:8p
 body.lux-mode .lux-metric-list{display:grid;gap:9px}
 body.lux-mode .lux-metric-row{background:#fffdf8;border:1px solid #e2c68f;border-radius:13px;padding:10px 12px;display:grid;grid-template-columns:1fr auto;gap:9px;align-items:center;font-size:13px}
 body.lux-mode .lux-metric-row strong{color:#075f58}
-body.lux-mode .stats{display:grid!important}
-body.lux-mode .bar{display:block!important}
+body.lux-mode[data-lux-page="metrics"] .main>.stats{display:grid!important}
+body.lux-mode[data-lux-page="metrics"] .main>.bar{display:block!important}
 body.lux-mode #luxSettings{border:2px solid #cfaa62!important;margin:12px 0!important}
 body.lux-mode #luxSettings>summary{font-size:16px}
-body.lux-mode .toolbar{display:flex!important;flex-wrap:wrap}
+body.lux-mode[data-lux-page="settings"] .main>.toolbar{display:flex!important;flex-wrap:wrap}
 body.lux-mode .toolbar button{flex:1;min-width:110px}
 body.lux-mode #filterPanel,.lux-mode #formPanel{margin:12px 0}
 @media(max-width:390px){body.lux-mode .luxury-brand{margin-top:61px!important}body.lux-mode .luxury-home h2{font-size:26px!important}body.lux-mode .luxury-links{gap:6px!important}body.lux-mode .luxury-links button{min-height:96px!important;font-size:10px!important;padding:7px 2px!important}body.lux-mode .luxury-links svg{width:30px;height:30px}body.lux-mode #overview .grid{grid-template-columns:1fr}}
