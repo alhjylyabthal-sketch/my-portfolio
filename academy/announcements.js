@@ -126,7 +126,7 @@
     }
   };
   document.addEventListener('submit',e=>{
-    if(e.target.id!=='academyNoticeForm')return;e.preventDefault();
+    if(e.target.getAttribute('id')!=='academyNoticeForm')return;e.preventDefault();
     const a=formData();if(!a){showToast('أكملي عنوان الإعلان والمهمة والتاريخ');return;}
     try{localStorage.setItem(KEY,JSON.stringify(a))}catch{}
     const link=acRoot()+'#notice/'+encodeNotice(a);
