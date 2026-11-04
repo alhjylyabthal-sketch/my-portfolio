@@ -2,6 +2,7 @@
 (function () {
   'use strict';
   const KEY='academy-teacher-notice-v1', SESSION_KEY='academy-visitor-notice-v1';
+  const TODAY_NOTICE={"title":"مقارنة الأعداد حتى ١٠","task":"١. افتحي تدريب «مقارنة الأعداد حتى ١٠» في الأكاديمية وحلّي أسئلته.\n٢. في دفتر الرياضيات: اكتبي العدد الأكبر من كل زوج: (٧، ٤) و(٥، ٩).\n٣. اكتبي العدد الأصغر من كل زوج: (٨، ٦) و(٢، ١٠).\n٤. ضعي الرمز المناسب (أكبر من، أصغر من، يساوي): ٦ ◯ ٣ ، ٤ ◯ ٤.","id":"4-6","date":"2026-11-04","url":""};
   const acEscape=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const today=()=>{const d=new Date();return new Date(d.getTime()-d.getTimezoneOffset()*60000).toISOString().slice(0,10)};
   const acRoot=()=>location.href.split('#')[0].split('?')[0];
@@ -47,7 +48,7 @@
       </div></div>`;
   }
   function renderHomeNotice(){
-    const a=savedNotice(SESSION_KEY)||savedNotice(KEY);
+    const a=savedNotice(SESSION_KEY)||(localStorage.getItem('academy-teacher-notice-edit-ts')?savedNotice(KEY):null)||TODAY_NOTICE;
     return `<section class="academy-notice-board" aria-label="إعلانات الفصل">
       <div class="academy-notice-head"><span class="academy-notice-icon" aria-hidden="true">📣</span><div><span class="academy-notice-overline">لوحة الإعلانات</span><h2>درس اليوم</h2></div></div>
       ${a?noticeBody(a):`<p class="academy-notice-empty">لا توجد إعلانات جديدة.</p>`}
@@ -58,7 +59,7 @@
     CHAPTERS.map(ch=>`<optgroup label="الفصل ${arabic(ch.id)}: ${acEscape(ch.title)}">${ch.lessons.map(l=>`<option value="${acEscape(l[0])}">${acEscape(l[1])} (ص ${arabic(l[4])})</option>`).join('')}</optgroup>`).join('');
   }
   function renderNoticeEditor(){
-    const a=savedNotice(KEY)||{title:'',task:'',id:'',date:today(),url:''};
+    const a=savedNotice(KEY)||TODAY_NOTICE;
     return `<div class="academy-notice-page">
       <div class="academy-notice-top"><button class="academy-notice-back" data-nav="home">← العودة إلى الأكاديمية</button>
         <span class="academy-notice-pill">للمعلمة</span></div>
@@ -110,7 +111,7 @@
     const raw=location.hash.replace(/^#\/?/,'');const parts=raw.split('/');const route=parts[0];
     if(route==='announce-edit'||route==='notice'){
       document.getElementById('app').innerHTML=route==='announce-edit'?renderNoticeEditor():renderSharedNotice(parts[1]||'');
-      if(route==='announce-edit'){const sel=document.getElementById('academyNoticeLesson');if(sel)sel.value=savedNotice(KEY)?.id||'';}
+      if(route==='announce-edit'){const sel=document.getElementById('academyNoticeLesson');if(sel)sel.value=(savedNotice(KEY)||TODAY_NOTICE)?.id||'';}
       const nav=document.getElementById('mainNav');if(nav)nav.hidden=true;
       document.getElementById('menuBtn')?.setAttribute('aria-expanded','false');
       document.title=(route==='announce-edit'?'إعداد الإعلان':'إعلان الحصة')+' | أكاديمية الرياضيات الصغيرة';
@@ -128,7 +129,7 @@
   document.addEventListener('submit',e=>{
     if(e.target.getAttribute('id')!=='academyNoticeForm')return;e.preventDefault();
     const a=formData();if(!a){showToast('أكملي عنوان الإعلان والمهمة والتاريخ');return;}
-    try{localStorage.setItem(KEY,JSON.stringify(a))}catch{}
+    try{localStorage.setItem(KEY,JSON.stringify(a));localStorage.setItem('academy-teacher-notice-edit-ts',String(Date.now()))}catch{}
     const link=acRoot()+'#notice/'+encodeNotice(a);
     const box=document.getElementById('academyNoticePreview');
     if(box){box.innerHTML=`<h2>✅ الإعلان جاهز للإرسال</h2><p>أرسلي هذا الرابط لقروب الصف؛ سيفتح الدرس والمهمة عند الطالبات.</p>
