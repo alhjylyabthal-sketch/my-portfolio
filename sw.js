@@ -1,6 +1,6 @@
 // Enjaz: local shell only; never cache private Supabase/auth responses.
-const CACHE_NAME='engaz-shell-v9';
-const SHELL=['./','./index.html','./cloud.js','./luxury-ui.css','./luxury-ui.js','./luxury-ornaments.svg','./manifest.webmanifest','./icon-192.png','./icon-512.png'];
+const CACHE_NAME='engaz-shell-v10';
+const SHELL=['./','./index.html','./cloud.js','./luxury-ui.css','./luxury-ui.js','./luxury-ornaments.svg','./approved-ornaments.webp','./approved-school-logo.webp','./final-cover.css','./final-cover.js','./manifest.webmanifest','./icon-192.png','./icon-512.png'];
 self.addEventListener('install',event=>{
   event.waitUntil(caches.open(CACHE_NAME).then(cache=>cache.addAll(SHELL)).then(()=>self.skipWaiting()));
 });
