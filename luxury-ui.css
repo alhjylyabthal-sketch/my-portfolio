@@ -73,3 +73,67 @@ body.lux-mode .toolbar button{flex:1;min-width:110px}
 body.lux-mode #filterPanel,.lux-mode #formPanel{margin:12px 0}
 @media(max-width:390px){body.lux-mode .luxury-brand{margin-top:61px!important}body.lux-mode .luxury-home h2{font-size:26px!important}body.lux-mode .luxury-links{gap:6px!important}body.lux-mode .luxury-links button{min-height:96px!important;font-size:10px!important;padding:7px 2px!important}body.lux-mode .luxury-links svg{width:30px;height:30px}body.lux-mode #overview .grid{grid-template-columns:1fr}}
 @media print{body.lux-mode .main>*{display:initial!important}body.lux-mode>header{display:none!important}body.lux-mode #luxuryHome,body.lux-mode .lux-content-page,body.lux-mode #luxSettings,body.lux-mode .toolbar,body.lux-mode .note{display:none!important}body.lux-mode #overview{display:block!important}body.lux-mode #printEntries{display:block!important}}
+
+
+/* Approved palette revision, 2026-11-04: vivid turquoise, ivory marble, gilded edges. */
+body.lux-mode{background:radial-gradient(ellipse at 50% 12%,#fffefe,#fff7f3 65%,#f4ebe6)!important}
+body.lux-mode .luxury-home{
+ background:#fffdfb url("./luxury-ornaments.svg") center center / 100% 100% no-repeat!important;
+ border:0!important;border-radius:24px!important;
+ box-shadow:0 10px 32px #69401525!important;
+ padding:0 16px 38px!important
+}
+body.lux-mode .luxury-home:before,body.lux-mode .luxury-home:after{display:none!important}
+body.lux-mode .luxury-brand{
+ margin:clamp(116px,18vw,172px) auto 15px!important;
+ background:transparent!important;gap:14px!important
+}
+body.lux-mode .luxury-brand>div{color:#033c3c!important;text-shadow:0 1px 0 #fffcf8!important}
+body.lux-mode .luxury-brand .ministry-brand{border-left:2px solid #c89336!important}
+body.lux-mode .luxury-flourish{color:#b88328!important;font-size:22px!important;text-shadow:0 1px 1px #fffad2}
+body.lux-mode .luxury-home h2{
+ background:linear-gradient(165deg,#fffdfa 0%,#fff0e3 45%,#fffdf9 100%)!important;
+ border:4px double #bc751f!important;
+ border-radius:25% 25% 22% 22% / 39% 39% 38% 38%!important;
+ padding:13px 5px!important;margin:9px auto 19px!important;
+ box-shadow:inset 0 0 0 3px #fffefa,0 4px 0 #f4c873,0 7px 1px #9a571c50,0 14px 19px #84420d30!important;
+ color:#004a48!important;
+ text-shadow:0 1px 0 #e6b65d,1px 3px 0 #f5d8a0!important;
+ letter-spacing:-.3px
+}
+body.lux-mode .luxury-teacher{
+ background:linear-gradient(110deg,#f7dba7 0%,#fffdfa 40%,#fff0ce 70%,#e4ae5b 100%)!important;
+ border:3px double #ac6d1d!important;border-radius:30px!important;
+ box-shadow:inset 0 0 0 2px #fff5db,0 4px 1px #a86f2c62,0 10px 12px #73431e24!important
+}
+body.lux-mode .luxury-teacher strong{color:#004a45!important;text-shadow:0 2px 1px #ecd1a1!important}
+body.lux-mode .luxury-quote{color:#735126!important}
+body.lux-mode .luxury-links{gap:10px!important}
+body.lux-mode .luxury-links button{
+ background:linear-gradient(135deg,#fffefa 0%,#fff5ed 53%,#ffe3bd 100%)!important;
+ color:#102e2a!important;
+ border:2px solid #bf791f!important;
+ border-radius:23px!important;
+ box-shadow:inset 0 1px 0 #fff, inset 0 0 0 2px #ffe6b1, 0 2px 0 #fff7c9,0 6px 0 #c08739,0 10px 16px #693f1733!important;
+ font-weight:800!important;font-size:clamp(11px,2.8vw,15px)!important;
+ text-shadow:0 1px 0 #fffefc!important
+}
+body.lux-mode .luxury-links svg{stroke:#007a78!important;filter:drop-shadow(1px 2px 0 #cf9845b5)!important}
+body.lux-mode .luxury-bottom{height:clamp(90px,16vw,155px)!important}
+body.lux-mode .luxury-bottom:before{display:none!important}
+body.lux-mode .lux-content-page,
+body.lux-mode #overview .item,body.lux-mode #filterPanel,body.lux-mode #formPanel{
+ background:linear-gradient(135deg,#fffefd,#fff6f0 82%,#fbe9d9)!important;
+ border:2px solid #c18a36!important;
+ box-shadow:inset 0 0 0 2px #fffdfa,0 4px 0 #b17d323a,0 8px 18px #6f4d2120!important
+}
+body.lux-mode .lux-page-heading,body.lux-mode #overview>h2{
+ color:#00534f!important;background:linear-gradient(120deg,#fffdfc,#ffebd5,#fffefa)!important;
+ border:2px solid #ba7d2a!important;box-shadow:0 4px 0 #d5aa6138
+}
+body.lux-mode .lux-metric-row,body.lux-mode #luxLibraryList .evidence{background:#fffefa!important;border-color:#d8af6a!important}
+body.lux-mode[data-lux-page="settings"] #luxSettings{background:linear-gradient(130deg,#fffdfb,#fff2e4)!important}
+@media(max-width:390px){
+ body.lux-mode .luxury-brand{margin-top:clamp(104px,17vw,126px)!important}
+ body.lux-mode .luxury-bottom{height:95px!important}
+}
