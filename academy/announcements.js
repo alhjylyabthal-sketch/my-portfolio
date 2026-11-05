@@ -2,6 +2,27 @@
 (function () {
   'use strict';
   const KEY='academy-teacher-notice-v1', SESSION_KEY='academy-visitor-notice-v1';
+  const LIVE_KEY='academy-public-notice-v1';
+  let liveNotice=null,liveLoading=false;
+  function cachedLiveNotice(){try{return validAnnouncement(JSON.parse(localStorage.getItem(LIVE_KEY)||'null'))}catch{return null}}
+  async function refreshLiveNotice(){
+    if(liveLoading)return;liveLoading=true;
+    try{
+      const response=await fetch('./live-notice.json?at='+Date.now(),{cache:'no-store'});
+      if(!response.ok)throw Error('Unable to fetch current assignment');
+      const current=validAnnouncement(await response.json());
+      if(!current)throw Error('Invalid assignment');
+      const changed=JSON.stringify(current)!==JSON.stringify(liveNotice);
+      liveNotice=current;
+      try{localStorage.setItem(LIVE_KEY,JSON.stringify(current))}catch{}
+      if(changed){
+        const card=document.querySelector('.academy-notice-board:not(.academy-notice-shared)');
+        if(card)card.outerHTML=renderHomeNotice();
+      }
+    }catch(err){
+      if(!liveNotice)liveNotice=cachedLiveNotice();
+    }finally{liveLoading=false}
+  }
   const TODAY_NOTICE={"title":"مقارنة الأعداد حتى ١٠","task":"١. افتحوا تدريب «مقارنة الأعداد حتى ١٠» في الأكاديمية وحلّوا أسئلته.\n٢. في دفتر الرياضيات: اكتبوا العدد الأكبر من كل زوج: (٧، ٤) و(٥، ٩).\n٣. اكتبوا العدد الأصغر من كل زوج: (٨، ٦) و(٢، ١٠).\n٤. ضعوا الرمز المناسب (أكبر من، أصغر من، يساوي): ٦ ◯ ٣ ، ٤ ◯ ٤.","id":"4-6","date":"2026-11-04","url":""};
   const acEscape=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const today=()=>{const d=new Date();return new Date(d.getTime()-d.getTimezoneOffset()*60000).toISOString().slice(0,10)};
@@ -44,38 +65,37 @@
       <details class="academy-notice-task" ${full?'open':''}><summary>📝 ${full?'مهمتك بعد الدرس':'عرض المهمة المنزلية'}</summary><p>${acEscape(a.task).replace(/\n/g,'<br>')}</p></details>
       <div class="academy-notice-actions">
         
-        ${a.url?`<a class="academy-notice-secondary" href="${acEscape(a.url)}" target="_blank" rel="noopener noreferrer">🔗 افتح الرابط المرفق</a>`:''}
+        ${a.url?`<a class="academy-notice-secondary" href="${acEscape(a.url)}" target="_blank" rel="noopener noreferrer">${/^https:\/\/(?:www\.)?padlet\.com\//i.test(a.url)?'📸 أشارك حلّي في لوحة الفصل':'🌟 افتح النشاط الإضافي'}</a>`:''}
         ${full?`<button class="academy-notice-secondary" data-ac-share-notice="1">📤 مشاركة الإعلان</button>`:''}
       </div></div>`;
   }
   function renderHomeNotice(){
-    const a=savedNotice(SESSION_KEY)||(localStorage.getItem('academy-teacher-notice-edit-ts')?savedNotice(KEY):null)||TODAY_NOTICE;
+    const a=liveNotice||cachedLiveNotice()||TODAY_NOTICE;
     return `<section class="academy-notice-board" aria-label="إعلانات الفصل">
       <div class="academy-notice-head"><span class="academy-notice-icon" aria-hidden="true">📣</span><div><span class="academy-notice-overline">لوحة الإعلانات</span><h2>${a&&a.date===today()?'مغامرة اليوم':'آخر مغامرة'}</h2></div></div>
       ${a?noticeBody(a):`<p class="academy-notice-empty">لا توجد إعلانات جديدة.</p>`}
-      <button class="academy-notice-teacher" data-nav="announce-edit">إعداد إعلان الحصة <span aria-hidden="true">✎</span></button>
+      <button class="academy-notice-teacher" data-nav="announce-edit">إدارة مغامرة اليوم <span aria-hidden="true">✎</span></button>
     </section>`;
   }
   function lessonOptions(){return `<option value="">بدون ربط بدرس من الأكاديمية</option>`+
     CHAPTERS.map(ch=>`<optgroup label="الفصل ${arabic(ch.id)}: ${acEscape(ch.title)}">${ch.lessons.map(l=>`<option value="${acEscape(l[0])}">${acEscape(l[1])} (ص ${arabic(l[4])})</option>`).join('')}</optgroup>`).join('');
   }
   function renderNoticeEditor(){
-    const a=savedNotice(KEY)||TODAY_NOTICE;
+    const a=savedNotice(KEY)||liveNotice||cachedLiveNotice()||TODAY_NOTICE;
     return `<div class="academy-notice-page">
       <div class="academy-notice-top"><button class="academy-notice-back" data-nav="home">← العودة إلى الأكاديمية</button>
         <span class="academy-notice-pill">للمعلمة</span></div>
-      <h1>📣 إعداد إعلان الحصة</h1><p class="academy-notice-lead">اختاري الدرس، واكتبي مهمة الطلاب والطالبات، ثم أرسلي رابط الإعلان للأهالي.</p>
+      <h1>📣 نشر مغامرة اليوم</h1><p class="academy-notice-lead">اختاري الدرس واكتبي المهمة. سيشاهدها الطلاب عند فتح رابط الأكاديمية نفسه.</p>
       <form id="academyNoticeForm" class="academy-notice-form">
         <label>تاريخ الحصة <input type="date" name="date" required value="${acEscape(a.date)}"></label>
         <label>اختاري الدرس <select name="id" id="academyNoticeLesson">${lessonOptions()}</select></label>
         <label>عنوان الإعلان <input name="title" required maxlength="110" placeholder="مثال: تعلّم الأعداد ٩ و١٠" value="${acEscape(a.title)}"></label>
         <label>مهمة اليوم <textarea name="task" required maxlength="500" rows="4" placeholder="مثال: حلّ تدريب الدرس ثم كتابة العددين في الدفتر.">${acEscape(a.task)}</textarea></label>
-        <label>رابط إضافي (اختياري) <input name="url" inputmode="url" dir="ltr" placeholder="https://..." value="${acEscape(a.url)}"><small>يمكنك إضافة رابط فيديو أو ورقة عمل أو أي صفحة إلكترونية آمنة.</small></label>
-        <div class="academy-notice-form-actions"><button type="submit" class="academy-notice-primary">📨 تجهيز الإعلان للمشاركة</button>
-        <button type="button" class="academy-notice-secondary" data-ac-share-lesson="1">🔗 نسخ رابط الدرس فقط</button></div>
+        <label>رابط لوحة الأعمال أو النشاط (اختياري) <input name="url" inputmode="url" dir="ltr" placeholder="https://padlet.com/..." value="${acEscape(a.url)}"><small>يمكنك ربط لوحة Padlet لعرض حلول الطلاب؛ يبقى رابط الأكاديمية كما هو.</small></label>
+        <div class="academy-notice-form-actions"><button type="submit" class="academy-notice-primary">📣 نشر مغامرة اليوم</button></div>
       </form>
       <div class="academy-notice-preview" id="academyNoticePreview" aria-live="polite"></div>
-      <p class="academy-notice-tip">يظهر الإعلان للأهالي عند فتح الرابط الذي ترسلينه. تغيير إعلان جهازك وحده لا يغيّر الصفحة عند بقية الزوار.</p>
+      <p class="academy-notice-tip">لأمان النشر، يلزم تأكيد الإعلان من حساب GitHub الذي يملك الموقع. بعد التأكيد، يظهر للطلاب في رابط الأكاديمية الدائم.</p>
     </div>`;
   }
   function renderSharedNotice(payload){
@@ -112,31 +132,30 @@
     const raw=location.hash.replace(/^#\/?/,'');const parts=raw.split('/');const route=parts[0];
     if(route==='announce-edit'||route==='notice'){
       document.getElementById('app').innerHTML=route==='announce-edit'?renderNoticeEditor():renderSharedNotice(parts[1]||'');
-      if(route==='announce-edit'){const sel=document.getElementById('academyNoticeLesson');if(sel)sel.value=(savedNotice(KEY)||TODAY_NOTICE)?.id||'';}
+      if(route==='announce-edit'){const sel=document.getElementById('academyNoticeLesson');if(sel)sel.value=(savedNotice(KEY)||liveNotice||cachedLiveNotice()||TODAY_NOTICE)?.id||'';}
       const nav=document.getElementById('mainNav');if(nav)nav.hidden=true;
       document.getElementById('menuBtn')?.setAttribute('aria-expanded','false');
       document.title=(route==='announce-edit'?'إعداد الإعلان':'إعلان الحصة')+' | أكاديمية الرياضيات الصغيرة';
       window.scrollTo(0,0);return;
     }
     oldRender();
-    if(route==='practice'){
-      const code=decodeURIComponent(parts[1]||'');if(lessonById(code)){
-        const card=document.querySelector('.practice-wrap');if(card&&!card.querySelector('[data-ac-share-current]')){
-          card.insertAdjacentHTML('afterbegin',`<button class="academy-notice-share-activity" data-ac-share-current="${acEscape(code)}">🔗 مشاركة رابط هذا الدرس</button>`);
-        }
-      }
-    }
+
   };
   document.addEventListener('submit',e=>{
     if(e.target.getAttribute('id')!=='academyNoticeForm')return;e.preventDefault();
     const a=formData();if(!a){showToast('أكملي عنوان الإعلان والمهمة والتاريخ');return;}
     try{localStorage.setItem(KEY,JSON.stringify(a));localStorage.setItem('academy-teacher-notice-edit-ts',String(Date.now()))}catch{}
-    const link=acRoot()+'#notice/'+encodeNotice(a);
+    const issueTitle='[نشر مغامرة] '+a.title;
+    const issueBody='ACADEMY_NOTICE_V1\\n'+JSON.stringify(a);
+    const publishLink='https://github.com/alhjylyabthal-sketch/my-portfolio/issues/new?title='
+      +encodeURIComponent(issueTitle)+'&body='+encodeURIComponent(issueBody);
     const box=document.getElementById('academyNoticePreview');
-    if(box){box.innerHTML=`<h2>✅ الإعلان جاهز للإرسال</h2><p>أرسلي هذا الرابط لقروب الصف؛ سيفتح الدرس والمهمة عند الطلاب والطالبات.</p>
-      <div class="academy-notice-form-actions"><button type="button" class="academy-notice-primary" data-ac-share-notice="1">📤 إرسال إعلان الحصة</button>
-      <button type="button" class="academy-notice-secondary" data-ac-copy-notice="1">🔗 نسخ رابط الإعلان</button></div>`;box.dataset.link=link;}
-    showToast('تم تجهيز الإعلان');
+    if(box){
+      box.innerHTML='<h2>✨ خطوة أخيرة للنشر</h2><p>اضغطي الزر، ثم أكّدي النشر في GitHub بالضغط على <strong>Submit new issue</strong>. سيتحدث إعلان الأكاديمية للجميع، ولا تحتاجين إرسال رابط جديد.</p>'
+        +'<a class="academy-notice-primary academy-notice-publish-link" href="'+acEscape(publishLink)+'" target="_blank" rel="noopener noreferrer">🔐 تأكيد النشر في GitHub</a>';
+      box.dataset.link=publishLink;
+    }
+    showToast('جهزت المهمة، أكّدي نشرها في GitHub');
   });
   document.addEventListener('click',async e=>{
     const b=e.target.closest('button');if(!b)return;
@@ -174,5 +193,10 @@
     .academy-notice-share-activity{border:1px solid #b9dcd8;border-radius:11px;padding:11px 16px;background:#f4fcfa;color:#117b73;font-weight:800;margin:0 0 15px;cursor:pointer}
     @media(max-width:560px){.academy-notice-board{padding:19px 16px;border-radius:20px}.academy-notice-actions button,.academy-notice-actions a,.academy-notice-form-actions button{width:100%}.academy-notice-form{padding:17px}.academy-notice-head{gap:10px}.academy-notice-icon{width:53px;height:53px;font-size:27px}}
   `;
-  const css=document.createElement('style');css.textContent=styles;document.head.appendChild(css);
+  const css=document.createElement('style');css.textContent=styles
+    +'.academy-notice-publish-link{display:inline-flex;align-items:center;justify-content:center;min-height:48px;border-radius:13px;padding:12px 17px;text-decoration:none;color:#fff;font-weight:900;margin-top:10px}.academy-notice-publish-link:hover{filter:brightness(1.06)}';
+  document.head.appendChild(css);
+  refreshLiveNotice();
+  window.addEventListener('focus',refreshLiveNotice);
+  document.addEventListener('visibilitychange',()=>{if(!document.hidden)refreshLiveNotice()});
 }());
