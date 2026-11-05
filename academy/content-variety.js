@@ -159,12 +159,15 @@ function composingTask(skill,type,seed){
    missing,0,12,seed,'العدد الناقص '+arabic(missing)+'.');
 }
 function ordinalTask(type,seed){
- const names=['🔴','🟡','🟢','🔵','⭐'];
- const offset=pos(seed,5),arr=names.slice(offset).concat(names.slice(0,offset));
- const target=arr.indexOf('⭐'),right=pos(type,2)===0,ordinal=right?target+1:5-target;
- return numQ('من جهة '+(right?'اليمين':'اليسار')+'، ما ترتيب النجمة؟',
-  '<div class="pattern" style="font-size:36px">'+arr.map(x=>'<span>'+x+'</span>').join('')+'</div>',
-  ordinal,1,5,seed,'ترتيب النجمة '+arabic(ordinal)+' من جهة '+(right?'اليمين':'اليسار')+'.');
+ const names=['🔴','🟡','🟢','🔵','⭐'],unit=pos(type,4),offset=pos(seed,5);
+ const arr=names.slice(offset).concat(names.slice(0,offset)),target=arr.indexOf('⭐');
+ const visual='<div class="pattern" style="font-size:36px">'+arr.map(x=>'<span>'+x+'</span>').join('')+'</div>';
+ if(unit===0)return numQ('من جهة اليمين، ما ترتيب النجمة؟',visual,target+1,1,5,seed,'النجمة في المرتبة '+arabic(target+1)+' من اليمين.');
+ if(unit===1)return numQ('من جهة اليسار، ما ترتيب النجمة؟',visual,5-target,1,5,seed,'النجمة في المرتبة '+arabic(5-target)+' من اليسار.');
+ const number=unit===2?2:3,right=unit===2,answer=right?arr[number-1]:arr[5-number];
+ return makeQuestion('أي شكل في المرتبة '+(number===2?'الثانية':'الثالثة')+' من جهة '+(right?'اليمين':'اليسار')+'؟',
+ visual,[answer,...arr.filter(x=>x!==answer).slice(0,3)].map(x=>strChoice(x,x===answer)),
+ 'نبدأ العد من جهة '+(right?'اليمين':'اليسار')+' حتى نصل إلى الشكل المطلوب.',seed);
 }
 
 function numberPatternTask(type,seed){
@@ -232,6 +235,37 @@ function drawTask(skill,type,seed){
  return numQ('أعدّ الصور ثم اختر العدد الذي يُرسم.',pictured,n,0,max,seed,'نرسم '+arabic(n)+' أشكال.',seed);
 }
 
+
+function zeroTask(type,seed){
+ const unit=pos(type,4);
+ if(unit===0)return numQ('كم عنصرًا داخل الإطار الخالي؟',circleDots(0),0,0,4,seed,'المجموعة الخالية عددها صفر.');
+ if(unit===1)return makeQuestion('اختر المجموعة الخالية.',frameText('المجموعة الخالية'),
+  [0,1,2,3].map(n=>htmlChoice(circleDots(n),n===0)),
+  'المجموعة التي ليس فيها دوائر تمثّل الصفر.',seed);
+ if(unit===2)return makeQuestion('كيف نقرأ الرمز ٠؟',frameText('٠'),
+  [strChoice('صفر',true),strChoice('واحد',false),strChoice('اثنان',false),strChoice('ثلاثة',false)],
+  'نقرأ الرمز ٠: صفر.',seed);
+ return numQ('لا توجد أي أشياء في الصورة؛ أي عدد يصفها؟',
+   '<div class="visual-zero" style="min-height:55px;padding:13px;border:2px dashed #b3cbd6;border-radius:15px">لا شيء هنا</div>',
+   0,0,4,seed,'عندما لا توجد أشياء فالعدد هو صفر.');
+}
+function aboveBelowTask(type,seed){
+ const unit=pos(type,4);
+ const stack=(top,bottom)=>'<div class="position-stack"><span>'+top+'</span><span>'+bottom+'</span></div>';
+ if(unit===0)return makeQuestion('أين النجمة بالنسبة إلى المربع؟',stack('⭐','🟦'),
+  [strChoice('فوق',true),strChoice('تحت',false)],
+  'النجمة فوق المربع.',seed);
+ if(unit===1)return makeQuestion('أين الدائرة بالنسبة إلى المثلث؟',stack('🔺','🟢'),
+  [strChoice('فوق',false),strChoice('تحت',true)],
+  'الدائرة تحت المثلث.',seed);
+ if(unit===2)return makeQuestion('أي شكل يقع فوق الدائرة الحمراء؟',stack('🟨','🔴'),
+  [strChoice('المربع الأصفر',true),strChoice('الدائرة الحمراء',false)],
+  'المربع الأصفر فوق الدائرة.',seed);
+ return makeQuestion('ما الشكل الذي يقع أسفل النجمة؟',stack('⭐','🟦'),
+  [strChoice('المربع الأزرق',true),strChoice('النجمة',false)],
+  'المربع الأزرق تحت النجمة.',seed);
+}
+
 function pickQuestion(skill,type,seed){
  if(rangeOf(skill))return numberTask(skill,type,seed);
  if(skill==='compare10'||skill==='compare20')return comparisonTask(skill,type,seed);
@@ -240,6 +274,8 @@ function pickQuestion(skill,type,seed){
  if(['addStory','addModel','addSentence','addSolve','addZero'].includes(skill))return additionTask(skill,type,seed);
  if(['compose456','compose789','compose101112'].includes(skill))return composingTask(skill,type,seed);
  if(skill==='ordinal')return ordinalTask(type,seed);
+ if(skill==='zero')return zeroTask(type,seed);
+ if(skill==='abovebelow')return aboveBelowTask(type,seed);
  if(skill==='pattern20')return numberPatternTask(type,seed);
  if(skill==='verticalAdd')return verticalAdditionTask(type,seed);
  if(skill==='model')return modelTask(type,seed);
