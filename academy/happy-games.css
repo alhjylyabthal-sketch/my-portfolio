@@ -140,3 +140,18 @@ body .academy-adventure-play{width:100%;padding:10px!important;font-size:15px}
 .buddy-celebrate svg{width:75px;flex:none}
 @media(max-width:700px){.playhero-figures .buddy-svg{width:95%;max-height:175px}.buddy-pick button{min-height:148px}.buddy-pick button svg{width:74px;height:82px}.buddy-header-strip{font-size:12px}.buddy-celebrate svg{width:65px}}
 @media(max-width:375px){.playhero-figures .buddy-svg{width:94%}.buddy-pick-btns{gap:8px}.buddy-pick button{padding:7px 4px}.buddy-pick button svg{width:68px}}
+
+/* First-visit companion selector: large, accessible tap targets */
+.academy-buddy-dialog{border:0;border-radius:34px;padding:0;background:#fffcf3;max-width:min(92vw,580px);width:100%;box-shadow:0 23px 70px #17384b55;overflow:visible}
+.academy-buddy-dialog::backdrop{background:#102b4a9c;backdrop-filter:blur(4px)}
+.academy-buddy-dialog-inner{text-align:center;padding:27px 20px 25px;background:radial-gradient(circle at 20% 8%,#e1f7ff,transparent 35%),radial-gradient(circle at 85% 80%,#ffe6bc,transparent 40%),#fffcf3;border:6px solid #fff;border-radius:34px}
+.academy-buddy-dialog h2{margin:2px 0 8px;font-size:clamp(23px,5vw,31px);line-height:1.5;color:#224667;font-weight:1000}
+.academy-buddy-dialog p{font-size:17px;color:#5b7389;font-weight:800;margin:2px 0 15px}
+.academy-buddy-dialog-choices{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.academy-buddy-dialog-choices button{display:grid;justify-items:center;align-items:center;background:#eafaff;border:4px solid #fff;border-radius:27px;box-shadow:0 6px 0 #c8e9f2;min-height:185px;padding:13px 6px;color:#244864;cursor:pointer}
+.academy-buddy-dialog-choices button:nth-child(2){background:#fff1db;box-shadow:0 6px 0 #f0dcb4}
+.academy-buddy-dialog-choices button svg{width:min(100%,127px);max-height:143px}
+.academy-buddy-dialog-choices button strong{font-size:21px;font-weight:1000}
+.academy-buddy-dialog-choices button:focus-visible{outline:4px solid #ffc65a;outline-offset:3px}
+.buddy-game-change{border:2px solid #ffffffc5;border-radius:100px;background:#fffdfa;display:inline-block;padding:4px 11px;color:#335a78;font-weight:900;font-size:12px;margin:3px 0 6px}
+@media(max-width:420px){.academy-buddy-dialog-inner{padding:19px 12px}.academy-buddy-dialog-choices{gap:9px}.academy-buddy-dialog-choices button{min-height:150px}.academy-buddy-dialog-choices button svg{max-height:105px}}
