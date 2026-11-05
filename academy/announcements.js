@@ -40,9 +40,10 @@
     return `<div class="academy-notice-info"><div class="academy-notice-datelabel">📅 ${acEscape(labelDate(a.date))}</div>
       <h3>${acEscape(a.title)}</h3>
       ${lesson?`<div class="academy-notice-course">📗 الفصل ${arabic(lesson.chapter.id)} · صفحة ${arabic(lesson.page)}</div>`:''}
-      <div class="academy-notice-task"><strong>📝 مهمتك اليوم</strong><p>${acEscape(a.task).replace(/\n/g,'<br>')}</p></div>
+      ${lesson?`<div class="academy-notice-adventure"><span class="academy-adventure-symbol" aria-hidden="true">${lesson.chapter.icon||'🎈'}</span><div class="academy-adventure-copy"><strong>تحدي الرياضيات!</strong><span>العب، تعلّم، واجمع النجوم</span></div><button type="button" class="academy-adventure-play" data-ac-open-lesson="${acEscape(a.id)}">🎮 ابدأ المغامرة</button></div>`:''}
+      <details class="academy-notice-task" ${full?'open':''}><summary>📝 ${full?'مهمتك بعد الدرس':'عرض المهمة المنزلية'}</summary><p>${acEscape(a.task).replace(/\n/g,'<br>')}</p></details>
       <div class="academy-notice-actions">
-        ${lesson?`<button class="academy-notice-primary" data-ac-open-lesson="${acEscape(a.id)}">🎯 افتح تدريب الدرس</button>`:''}
+        ${lesson?`<button class="academy-notice-primary" data-ac-open-lesson="${acEscape(a.id)}">🎮 العب مغامرة الدرس</button>`:''}
         ${a.url?`<a class="academy-notice-secondary" href="${acEscape(a.url)}" target="_blank" rel="noopener noreferrer">🔗 افتح الرابط المرفق</a>`:''}
         ${full?`<button class="academy-notice-secondary" data-ac-share-notice="1">📤 مشاركة الإعلان</button>`:''}
       </div></div>`;
@@ -50,7 +51,7 @@
   function renderHomeNotice(){
     const a=savedNotice(SESSION_KEY)||(localStorage.getItem('academy-teacher-notice-edit-ts')?savedNotice(KEY):null)||TODAY_NOTICE;
     return `<section class="academy-notice-board" aria-label="إعلانات الفصل">
-      <div class="academy-notice-head"><span class="academy-notice-icon" aria-hidden="true">📣</span><div><span class="academy-notice-overline">لوحة الإعلانات</span><h2>درس اليوم</h2></div></div>
+      <div class="academy-notice-head"><span class="academy-notice-icon" aria-hidden="true">📣</span><div><span class="academy-notice-overline">لوحة الإعلانات</span><h2>${a&&a.date===today()?'مغامرة اليوم':'آخر مغامرة'}</h2></div></div>
       ${a?noticeBody(a):`<p class="academy-notice-empty">لا توجد إعلانات جديدة.</p>`}
       <button class="academy-notice-teacher" data-nav="announce-edit">إعداد إعلان الحصة <span aria-hidden="true">✎</span></button>
     </section>`;
