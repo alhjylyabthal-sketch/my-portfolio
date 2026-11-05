@@ -1,6 +1,6 @@
 /* Offline public academy shell; independent from Enjaz portfolio service worker. */
-const ACADEMY_CACHE='little-math-academy-shell-v3';
-const ACADEMY_ASSETS=['./','./index.html','./happy-games.css','./happy-games.js','./announcements.js','./academy-approved-visual.css','./academy-characters.webp','./academy-hero-art.webp','./academy-manifest.webmanifest','./academy-icon.svg'];
+const ACADEMY_CACHE='little-math-academy-shell-v4';
+const ACADEMY_ASSETS=['./','./index.html','./happy-games.css','./content-variety.js','./happy-games.js','./announcements.js','./academy-approved-visual.css','./academy-characters.webp','./academy-hero-art.webp','./academy-manifest.webmanifest','./academy-icon.svg'];
 self.addEventListener('install', event => {
  event.waitUntil(caches.open(ACADEMY_CACHE).then(cache=>cache.addAll(ACADEMY_ASSETS)).then(()=>self.skipWaiting()));
 });
