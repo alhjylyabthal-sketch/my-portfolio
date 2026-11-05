@@ -79,7 +79,7 @@ var numbers=choice.text.split('،').map(function(x){return x.trim()});
 if(numbers.length<3||numbers.length>4)return null;
 if(!sequenceState||sequenceState.key!==s.lesson.code+'-'+s.index)sequenceState={key:s.lesson.code+'-'+s.index,picked:[]};
 var candidates=s.index%2===0?numbers.slice(1).concat(numbers[0]):numbers.slice().reverse();
-return '<div class="sequence-board" data-sequence-game="1"><div class="sequence-help">المس الأعداد من '+(q.prompt.includes('الأكبر إلى الأصغر')?'الأكبر إلى الأصغر':'الأصغر إلى الأكبر')+' 👆</div>'
+return '<div class="sequence-board" data-sequence-game="1"><div class="sequence-help">المس الأعداد من '+((q.prompt.includes('الأكبر إلى الأصغر')||q.prompt.includes('تنازلي'))?'الأكبر إلى الأصغر':'الأصغر إلى الأكبر')+' 👆</div>'
 +'<div class="sequence-slots">'+numbers.map(function(_,i){return '<span class="sequence-slot" data-order-slot="'+i+'">'+(sequenceState.picked[i]||'؟')+'</span>'}).join('')+'</div>'
 +'<div class="sequence-tiles">'+candidates.map(function(n){return '<button type="button" class="sequence-tile" data-order-tile="'+n+'" '+(sequenceState.picked.includes(n)?'disabled':'')+'>'+n+'</button>'}).join('')+'</div>'
 +'<button class="sequence-reset" type="button" data-order-reset="1">↻ أبدأ من جديد</button><div class="sequence-result" aria-live="polite"></div></div>';
