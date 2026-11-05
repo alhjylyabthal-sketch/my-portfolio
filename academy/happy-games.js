@@ -14,29 +14,30 @@ var chapters={
 6:{name:'مهرجان الجمع',emoji:'🧺',sub:'هيا نجمع',mode:'garden',sample:'6-1'}
 };
 function character(who){
-var boy=who==='mishmish',shirt=boy?'#f9ad61':'#68c8d2',dark=boy?'#2a4259':'#493b57';
-return '<svg class="buddy-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 175" role="img" aria-label="'+(boy?'بدر رفيق المغامرة':'لولو رفيقة المغامرة')+'">'
-+'<ellipse cx="80" cy="167" rx="49" ry="7" fill="#3b7089" opacity=".15"/>'
-+'<path d="M58 132L52 160Q65 169 74 162L77 141M94 140L98 162Q110 169 119 160L111 128" fill="#496a9c" stroke="#395b80" stroke-width="3"/>'
-+'<path d="M45 121Q20 116 20 93M118 120Q140 116 140 94" fill="none" stroke="#e6a877" stroke-width="12" stroke-linecap="round"/>'
-+'<circle cx="20" cy="91" r="8" fill="#e6a877"/><circle cx="140" cy="92" r="8" fill="#e6a877"/>'
-+(!boy?'<ellipse cx="32" cy="77" rx="17" ry="26" fill="'+dark+'"/><ellipse cx="128" cy="77" rx="17" ry="26" fill="'+dark+'"/><path d="M21 72Q11 53 28 45M139 72Q150 52 131 45" stroke="'+dark+'" stroke-width="11" fill="none" stroke-linecap="round"/>':'')
-+'<path d="M51 119Q80 110 109 119L119 151Q80 166 43 151Z" fill="'+shirt+'" stroke="'+(boy?'#d58d43':'#389cab')+'" stroke-width="4" stroke-linejoin="round"/>'
-+'<path d="M51 115L43 126M109 115L117 126" stroke="'+shirt+'" stroke-width="12" stroke-linecap="round"/>'
-+'<path d="M76 126L80 119 85 126 93 128 87 135 89 144 80 139 71 144 73 135 67 128Z" fill="#fff4ae" stroke="#fff" stroke-width="1.5"/>'
-+'<ellipse cx="80" cy="77" rx="48" ry="49" fill="#edb585" stroke="#c68c65" stroke-width="3"/>'
-+(!boy?'<path d="M34 76Q19 18 79 21Q135 18 126 76Q119 61 103 59Q81 44 69 54Q51 66 34 76Z" fill="'+dark+'"/><path d="M53 35Q80 11 110 34" fill="none" stroke="#ffe29a" stroke-width="9" stroke-linecap="round"/><circle cx="42" cy="44" r="5" fill="#ffe29a"/>':
-'<path d="M35 63Q18 43 41 32Q43 13 65 24Q77 10 91 22Q115 10 121 31Q148 40 124 66L119 54Q96 49 84 40Q67 56 35 63Z" fill="'+dark+'"/><circle cx="51" cy="30" r="11" fill="'+dark+'"/><circle cx="96" cy="22" r="9" fill="'+dark+'"/>')
-+'<g class="blink"><ellipse cx="63" cy="79" rx="6.5" ry="9" fill="#263748"/><ellipse cx="99" cy="79" rx="6.5" ry="9" fill="#263748"/><circle cx="65" cy="76" r="2.4" fill="#fff"/><circle cx="101" cy="76" r="2.4" fill="#fff"/></g>'
-+'<path d="M54 68Q62 64 70 69M92 68Q99 64 107 69" stroke="'+dark+'" stroke-width="3" stroke-linecap="round" fill="none"/>'
-+'<ellipse cx="49" cy="94" rx="10" ry="5" fill="#ec8892" opacity=".53"/><ellipse cx="113" cy="94" rx="10" ry="5" fill="#ec8892" opacity=".53"/>'
-+'<path d="M73 102Q81 111 90 102" stroke="#ad6360" stroke-width="4" stroke-linecap="round" fill="none"/>'
-+'<circle cx="82" cy="91" r="2.5" fill="#dc936d"/>'
-+'<path d="M52 165Q64 171 75 166M98 165Q109 171 120 166" stroke="#263e5b" stroke-width="7" stroke-linecap="round" fill="none"/>'
-+'</svg>';
+ var boy=who==='mishmish',hair=boy?'#263e59':'#3a3157',outfit=boy?'#f6a65f':'#63c9c9',name=boy?'بدر':'لولو';
+ return `<svg class="buddy-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 180" role="img" aria-label="${name} ${boy?'رفيق':'رفيقة'} المغامرة">
+ <ellipse cx="80" cy="173" rx="43" ry="5" fill="#57768e" opacity=".17"/>
+ <path d="M61 132L57 164Q65 171 75 164L78 143M95 143L99 164Q111 171 119 163L111 132" fill="#496c91" stroke="#345775" stroke-width="3.5" stroke-linejoin="round"/>
+ <path d="M55 164Q64 170 76 164M98 164Q108 170 119 163" fill="none" stroke="#263e59" stroke-width="8" stroke-linecap="round"/>
+ <path d="M51 120Q34 111 28 100M112 120Q128 111 133 100" fill="none" stroke="#eab68e" stroke-width="12" stroke-linecap="round"/>
+ <circle cx="28" cy="99" r="7" fill="#eab68e"/><circle cx="133" cy="99" r="7" fill="#eab68e"/>
+ ${boy?'<path d="M45 118Q80 106 115 118L122 154Q80 169 39 154Z" fill="'+outfit+'" stroke="#df874c" stroke-width="3.5"/>':'<path d="M52 116Q80 106 108 116L123 156Q80 174 37 156Z" fill="'+outfit+'" stroke="#349eae" stroke-width="3.5"/><path d="M53 125L107 125" stroke="#e8fbff" stroke-width="5" stroke-linecap="round"/>'}
+ <path d="M51 120L39 132M109 120L121 131" stroke="${outfit}" stroke-width="12" stroke-linecap="round"/>
+ <circle cx="81" cy="137" r="14" fill="#fff8cd" stroke="#fff" stroke-width="2"/>
+ <path d="M81 126L84 133 92 134 86 140 88 149 81 145 74 149 76 140 70 134 78 133Z" fill="#e9ae4d"/>
+ ${boy?'<path d="M39 61Q25 44 36 31Q40 17 56 18Q71 6 85 17Q102 7 116 19Q134 28 123 54L115 64Q108 45 94 48Q72 35 53 61Z" fill="'+hair+'"/><path d="M44 29Q80 5 119 28" fill="none" stroke="#e8b16e" stroke-width="7" stroke-linecap="round"/>':'<path d="M31 81Q18 53 29 31Q45 7 79 12Q123 10 132 43Q139 68 126 92L115 88L116 56Q87 41 62 54L44 71L47 93Z" fill="'+hair+'"/><ellipse cx="31" cy="88" rx="13" ry="24" fill="'+hair+'"/><ellipse cx="129" cy="88" rx="13" ry="24" fill="'+hair+'"/>'}
+ <ellipse cx="80" cy="78" rx="44" ry="47" fill="#efbd94" stroke="#d79d77" stroke-width="2.5"/>
+ ${boy?'<path d="M37 66Q30 44 43 36Q61 24 80 39Q100 30 119 44L123 65Q104 60 95 50Q75 66 58 58Z" fill="'+hair+'"/>':'<path d="M36 71Q27 39 49 25Q75 10 108 26Q131 37 124 72Q108 54 101 47Q70 62 51 56Z" fill="'+hair+'"/><path d="M109 38Q119 27 128 37" fill="none" stroke="#ffe38e" stroke-width="7" stroke-linecap="round"/><circle cx="125" cy="35" r="8" fill="#ffd36c"/><circle cx="125" cy="35" r="3" fill="#fff9df"/>'}
+ <ellipse cx="63" cy="80" rx="6" ry="8" fill="#293b4b"/><ellipse cx="99" cy="80" rx="6" ry="8" fill="#293b4b"/>
+ <circle cx="65" cy="77" r="2.2" fill="#fff"/><circle cx="101" cy="77" r="2.2" fill="#fff"/>
+ <path d="M55 68Q63 64 70 68M92 68Q100 64 107 68" fill="none" stroke="${hair}" stroke-width="2.8" stroke-linecap="round"/>
+ <ellipse cx="50" cy="95" rx="9" ry="5" fill="#ee8793" opacity=".43"/><ellipse cx="112" cy="95" rx="9" ry="5" fill="#ee8793" opacity=".43"/>
+ <path d="M73 103Q81 112 90 103" fill="none" stroke="#a65857" stroke-width="3.8" stroke-linecap="round"/>
+ <path d="M80 91L78 96 82 96" fill="none" stroke="#d89575" stroke-width="2" stroke-linecap="round"/>
+ </svg>`;
 }
-function buddyPicker(){return '<section class="buddy-pick"><strong>اختر رفيقك في المغامرة ✨</strong><div class="buddy-pick-btns">'
-+['lulu','mishmish'].map(function(x){return '<button type="button" data-buddy="'+x+'" aria-pressed="'+(x===buddy)+'">'+character(x)+'<span>'+(x==='lulu'?'لولو':'بدر')+'</span></button>'}).join('')+'</div></section>';}
+function buddyPicker(){return '<section class="buddy-pick" aria-label="اختيار شخصية المغامرة"><div class="buddy-pick-copy"><strong>من يرافقك في المغامرة؟ ✨</strong><p>اختاري شخصيتك، وسترافقك في الألعاب والتحديات.</p></div><div class="buddy-pick-btns">'
++['lulu','mishmish'].map(function(x){return '<button type="button" data-buddy="'+x+'" aria-pressed="'+(x===buddy)+'">'+character(x)+'<span>'+(x==='lulu'?'لولو':'بدر')+'</span><small>'+(x===buddy?'شخصيتي':'اختاري')+'</small></button>'}).join('')+'</div></section>';}
 function miniNav(){return '<nav class="play-mininav" aria-label="أقسام الأكاديمية">'
 +[['lessons','📚','الدروس'],['games','🎮','الألعاب'],['tests','🏅','التحديات'],['evidence','⭐','نجومي']].map(function(x){
 return '<button data-nav="'+x[0]+'"><span aria-hidden="true">'+x[1]+'</span>'+x[2]+'</button>'}).join('')+'</nav>';}
@@ -48,19 +49,20 @@ return '<button class="play-chapter" type="button" '+(shortcuts?'data-lesson="'+
 +'<span class="world-name">'+w.name+'</span><span class="world-sub">'+w.sub+'</span></button>';
 }).join('')+'</section>';
 }
+var pageHeaderOld=pageHeader;
+pageHeader=function(title,description,back){return pageHeaderOld(title,description,back).replace(/<div class="mascot-strip"[\s\S]*?<\/div>/,'<div class="buddy-header-strip">'+character(buddy)+'<span>🌟 '+(buddy==='lulu'?'لولو':'بدر')+' معك في رحلة الرياضيات</span></div>');};
 var homeOld=renderHome;
 renderHome=function(){
 var total=CHAPTERS.reduce(function(n,c){return n+c.lessons.length},0),done=completedCount(),pct=Math.round(done/total*100);
 return '<section class="playhome"><section class="playhero"><div class="playhero-copy">'
-+'<span class="hey">🌞 أهلاً بك يا بطل الرياضيات!</span><h1>أكاديمية الرياضيات الصغيرة</h1>'
++'<span class="hey">🌟 أهلاً بكِ يا نجمة الرياضيات!</span><h1>أكاديمية الرياضيات الصغيرة</h1>'
 +'<p>عالم من الألعاب والنجوم والمغامرات الممتعة</p><button class="playbigbutton" data-lesson="4-6">🎈 العب تحدي المقارنة</button></div>'
-+'<div class="playhero-figures">'+character('lulu')+character('mishmish')+'</div></section>'
-+miniNav()+'<div class="quick-links" hidden aria-hidden="true" style="display:none!important"></div>'
++'<div class="playhero-figures">'+character(buddy)+'</div></section>'
+ +buddyPicker()+miniNav()+'<div class="quick-links" hidden aria-hidden="true" style="display:none!important"></div>'
 +'<h2 class="play-section-head">🎮 اختر مغامرتك</h2>'+worlds('games',true)
-+buddyPicker()
-+'<section class="play-progress"><strong>🌟 نجومي: '+arabic(done)+' / '+arabic(total)+'</strong><div class="track" role="progressbar" aria-label="تقدمي" aria-valuenow="'+pct+'" aria-valuemin="0" aria-valuemax="100"><span style="width:'+pct+'%"></span></div>'
++ '<section class="play-progress"><strong>🌟 نجومي: '+arabic(done)+' / '+arabic(total)+'</strong><div class="track" role="progressbar" aria-label="تقدمي" aria-valuenow="'+pct+'" aria-valuemin="0" aria-valuemax="100"><span style="width:'+pct+'%"></span></div>'
 +'<button data-nav="evidence">شاهد إنجازاتي</button></section>'
-+'<p class="info-note" style="text-align:center">الصف الأول الابتدائي • الفصل الدراسي الأول • المعلمة ابتهال الحجيلي</p></section>';
++'<p class="info-note" style="text-align:center">طالبات الصف الأول الابتدائي • الفصل الدراسي الأول • المعلمة ابتهال الحجيلي</p></section>';
 };
 var categoryOld=renderCategory;
 renderCategory=function(mode){
@@ -117,7 +119,7 @@ if(count)html=html.replace('<div class="options"','<div class="tap-counter" aria
 return html;
 };
 var resultOld=renderResult;
-renderResult=function(s){var h=resultOld(s);return h.replace('<section class="result-card">','<section class="result-card play-result"><div class="award-stars" aria-label="نجوم المكافأة">'+('⭐'.repeat(Math.max(1,Math.min(5,Math.ceil(s.score/2)))))+'</div>');};
+renderResult=function(s){var h=resultOld(s);return h.replace('<section class="result-card">','<section class="result-card play-result"><div class="buddy-celebrate">'+character(buddy)+'<strong>رائع! أنجزتِ المغامرة 🌟</strong></div><div class="award-stars" aria-label="نجوم المكافأة">'+('⭐'.repeat(Math.max(1,Math.min(5,Math.ceil(s.score/2)))))+'</div>');};
 var answerOld=answerQuestion;
 answerQuestion=function(idx){
 if(!session||session.selected!==null)return;
