@@ -3,8 +3,8 @@
 (function(){
 'use strict';
 if(window.__littleMathAdventure)return;window.__littleMathAdventure=true;
-var BUDDY_KEY='little-math-academy-buddy-v1',buddy='lulu';
-try{if(localStorage.getItem(BUDDY_KEY)==='mishmish')buddy='mishmish'}catch(e){}
+var BUDDY_KEY='little-math-academy-buddy-v1',buddy='lulu',buddyChoiceMade=false;
+try{const saved=localStorage.getItem(BUDDY_KEY);if(saved==='mishmish'||saved==='lulu'){buddy=saved;buddyChoiceMade=true;}}catch(e){}
 var chapters={
 1:{name:'حديقة الأشكال',emoji:'🌼',sub:'ألوان وأشكال',mode:'garden',sample:'1-1'},
 2:{name:'قطار الأعداد',emoji:'🚂',sub:'أعدّ وأتعلّم',mode:'train',sample:'2-1'},
@@ -38,6 +38,18 @@ function character(who){
 }
 function buddyPicker(){return '<section class="buddy-pick" aria-label="اختيار شخصية المغامرة"><div class="buddy-pick-copy"><strong>من يرافقك في المغامرة؟ ✨</strong><p>اختاري شخصيتك، وسترافقك في الألعاب والتحديات.</p></div><div class="buddy-pick-btns">'
 +['lulu','mishmish'].map(function(x){return '<button type="button" data-buddy="'+x+'" aria-pressed="'+(x===buddy)+'">'+character(x)+'<span>'+(x==='lulu'?'لولو':'بدر')+'</span><small>'+(x===buddy?'شخصيتي':'اختاري')+'</small></button>'}).join('')+'</div></section>';}
+function openBuddyDialog(){
+ let dlg=document.getElementById('academyBuddyDialog');
+ if(!dlg){
+  dlg=document.createElement('dialog');dlg.id='academyBuddyDialog';dlg.className='academy-buddy-dialog';
+  dlg.setAttribute('aria-label','اختيار شخصية المغامرة');
+  dlg.innerHTML='<div class="academy-buddy-dialog-inner"><h2>✨ اختر رفيقك للمغامرة</h2><p>من سيرافقك في جميع الألعاب؟</p>'
+   +'<div class="academy-buddy-dialog-choices"><button type="button" data-buddy="lulu">'+character('lulu')+'<strong>لولو</strong></button>'
+   +'<button type="button" data-buddy="mishmish">'+character('mishmish')+'<strong>بدر</strong></button></div></div>';
+  dlg.addEventListener('cancel',e=>e.preventDefault());document.body.appendChild(dlg);
+ }
+ if(!dlg.open){if(dlg.showModal)dlg.showModal();else dlg.setAttribute('open','');}
+}
 function miniNav(){return '<nav class="play-mininav" aria-label="أقسام الأكاديمية">'
 +[['lessons','📚','الدروس'],['games','🎮','الألعاب'],['tests','🏅','التحديات'],['evidence','⭐','نجومي']].map(function(x){
 return '<button data-nav="'+x[0]+'"><span aria-hidden="true">'+x[1]+'</span>'+x[2]+'</button>'}).join('')+'</nav>';}
@@ -111,7 +123,7 @@ var html=qOld(s,displayedQ);
 var steps=Array.from({length:s.questions.length},function(_,i){
 return '<span class="'+(i<s.index?'done':i===s.index?'now':'')+'" aria-hidden="true">'+(i<s.index?'★':i===s.index?'✦':'•')+'</span>';
 }).join('');
-var scene='<div class="play-scene">'+character(buddy)+'<div><small>المرحلة '+arabic(s.index+1)+' من '+arabic(s.questions.length)+'</small>'
+var scene='<div class="play-scene">'+character(buddy)+'<div><button type="button" class="buddy-game-change" data-change-buddy="1">🎨 تغيير رفيقي</button><small>المرحلة '+arabic(s.index+1)+' من '+arabic(s.questions.length)+'</small>'
 +'<h2>'+w.name+'</h2><div class="play-steps">'+steps+'</div></div></div>';
 html=html.replace('<section class="practice-card">','<section class="practice-card playgame w'+ch+' mode-'+mode+'">'+scene);
 if(sequence){html=html.replace(/<div class="options"[\s\S]*?<\/div>\s*(?=<div class="quiz-footer">|<div class="feedback)/,'');}
@@ -129,10 +141,12 @@ var card=document.querySelector('.playgame');if(card&&correct&&!window.matchMedi
 card.animate([{transform:'scale(1)'},{transform:'scale(1.018)'},{transform:'scale(1)'}],{duration:280});}
 };
 document.addEventListener('click',function(e){
+if(e.target.closest('[data-change-buddy]')){openBuddyDialog();return;}
 var pick=e.target.closest('[data-buddy]');
 if(pick){
 buddy=pick.getAttribute('data-buddy')==='mishmish'?'mishmish':'lulu';
-try{localStorage.setItem(BUDDY_KEY,buddy)}catch(err){}
+buddyChoiceMade=true;try{localStorage.setItem(BUDDY_KEY,buddy)}catch(err){}
+const dlg=document.getElementById('academyBuddyDialog');if(dlg&&dlg.open){dlg.close?.();dlg.removeAttribute('open');}
 var y=window.scrollY;render();window.scrollTo(0,y);return;
 }
 var dot=e.target.closest('[data-tap-dot]');
@@ -167,5 +181,9 @@ var game=reset.closest('.sequence-board');
 game.querySelectorAll('.sequence-slot').forEach(function(el){el.textContent='؟';el.classList.remove('filled')});
 game.querySelectorAll('.sequence-tile').forEach(function(el){el.disabled=false});return;
 }
+});
+window.addEventListener('DOMContentLoaded',function(){
+ const route=(location.hash||'#home').replace(/^#\/?/,'');
+ if(!buddyChoiceMade && !/^(notice|announce-edit|evidence)/.test(route))openBuddyDialog();
 });
 })();
