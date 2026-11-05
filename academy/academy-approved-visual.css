@@ -57,3 +57,14 @@ body{background:linear-gradient(165deg,#fffefa 0%,#fffcf5 55%,#eafbff 100%);colo
 }
 @media(max-width:380px){.playhero{grid-template-columns:1.1fr .9fr}.playhero h1{font-size:22px}.playhero-figures{height:196px}.playhero p{font-size:11px}.playbigbutton{font-size:12px}.buddy-pick button .buddy-art{height:118px}.buddy-pick button{min-height:181px}}
 @media(prefers-reduced-motion:reduce){.buddy-art{animation:none}.buddy-pick button,.play-chapter{transition:none}}
+/* Keep all three-dimensional character artwork legible on narrow phones. */
+@media(max-width:440px){
+ .playhero{grid-template-columns:minmax(0,1fr);gap:4px;padding:18px 18px 12px;min-height:0}
+ .playhero-copy{text-align:center}
+ .playhero .hey{margin-bottom:8px}
+ .playhero h1{font-size:clamp(27px,8vw,34px);margin:0 auto}
+ .playhero p{font-size:13px;margin:8px auto 12px}
+ .playbigbutton{min-height:48px;font-size:14px}
+ .playhero-figures{height:240px;width:100%;max-width:350px;margin:0 auto}
+ .academy-hero-art{height:100%;width:100%;object-fit:contain}
+}

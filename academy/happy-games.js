@@ -163,6 +163,10 @@ game.querySelectorAll('.sequence-slot').forEach(function(el){el.textContent='؟'
 game.querySelectorAll('.sequence-tile').forEach(function(el){el.disabled=false});return;
 }
 });
+window.addEventListener('hashchange',function(){
+ const route=(location.hash||'#home').replace(/^#\/?/,'');
+ if(!buddyChoiceMade && /^practice(?:\/|$)/.test(route))openBuddyDialog();
+});
 window.addEventListener('DOMContentLoaded',function(){
  const route=(location.hash||'#home').replace(/^#\/?/,'');
  if(!buddyChoiceMade && /^practice(?:\/|$)/.test(route))openBuddyDialog();
