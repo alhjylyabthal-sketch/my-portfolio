@@ -45,9 +45,9 @@ renderHome=function(){
 var total=CHAPTERS.reduce(function(n,c){return n+c.lessons.length},0),done=completedCount(),pct=Math.round(done/total*100);
 return '<section class="playhome"><section class="playhero"><div class="playhero-copy">'
 +'<span class="hey">🌞 أهلاً بك يا بطل الرياضيات!</span><h1>أكاديمية الرياضيات الصغيرة</h1>'
-+'<p>عالم من الألعاب والنجوم والمغامرات الممتعة</p><button class="playbigbutton" data-lesson="4-6">🎈 العب مغامرة اليوم</button></div>'
++'<p>عالم من الألعاب والنجوم والمغامرات الممتعة</p><button class="playbigbutton" data-lesson="4-6">🎈 العب تحدي المقارنة</button></div>'
 +'<div class="playhero-figures">'+character('lulu')+character('mishmish')+'</div></section>'
-+miniNav()+'<div class="quick-links" hidden aria-hidden="true"></div>'
++miniNav()+'<div class="quick-links" hidden aria-hidden="true" style="display:none!important"></div>'
 +'<h2 class="play-section-head">🎮 اختر مغامرتك</h2>'+worlds('games',true)
 +buddyPicker()
 +'<section class="play-progress"><strong>🌟 نجومي: '+arabic(done)+' / '+arabic(total)+'</strong><div class="track" role="progressbar" aria-label="تقدمي" aria-valuenow="'+pct+'" aria-valuemin="0" aria-valuemax="100"><span style="width:'+pct+'%"></span></div>'
