@@ -317,7 +317,7 @@ return `${pageHeader(`${c.icon} الفصل ${arabic(c.id)}: ${c.title}`,'اخت�
 <div class="lesson-list">${entries.map((l,i)=>{let done=progress[l.code],isTest=!!l.testType;
 return `<article class="lesson-row ${done?'done':''}"><span class="chapter-index">${isTest?'★':arabic(i+1)}</span>
  <div class="rowcopy"><strong>${l.title}</strong><small>${isTest?'تقويم الفصل':'الدرس '+l.code} • صفحة ${arabic(l.page)} ${done?`<span class="done-tag">• أنجزت: ${arabic(done.best)}٪</span>`:''}</small></div>
- <button class="${isTest?'test-button':''}" data-lesson="${l.code}">${done?'إعادة':'ابدأ'} ←</button></article>`}).join('')}</div><div class="info-note">✏️ لا تنسَ التدرّب على كتابة الأعداد في دفترك أيضًا!</div>`;
+ <button class="${isTest?'test-button':''}" data-lesson="${l.code}">${done?'إعادة':'ابدأ'} ←</button></article>`}).join('')}</div>`;
 }
 /* ===== أنشطة أصلية محددة المهارة، لا أسئلة قصصية تخيلية ===== */
 function circleDots(n,color='#15969e'){
@@ -383,9 +383,12 @@ function generate(skill,i){const seed=i+5;
     htmlChoice(shape(t,c),true),htmlChoice(shape(wrongShape,c),false),htmlChoice(shape(t,wrongColor),false),htmlChoice(shape(wrongShape,wrongColor),false)],`لا بد من تحقق الخاصيتين: ${shapeName} و${colorName}.`,seed);
  }
  if(skill==='equal'){
-  const n=chooseNumber(2,6,i);
-  if(i>=5)return numQ('كم دائرة في المجموعة حتى تختار مجموعة مساوية لها؟',circleDots(n,'#df9c27'),n,0,9,seed,`فيها ${arabic(n)} دوائر.`);
-  return makeQuestion('أي مجموعة لها العدد نفسه من الدوائر؟',circleDots(n),[n,n+1,n-1,n+2].map(x=>htmlChoice(circleDots(x),x===n)),`المجموعتان المتساويتان فيهما ${arabic(n)} دوائر.`,seed);
+  const n=chooseNumber(2,6,i),result='في كل مجموعة '+arabic(n)+' عناصر.';
+  if(i%3===1)return numQ('كم عنصرًا في المجموعة؟',tenFrame(n),n,1,8,seed,result);
+  if(i%3===2)return makeQuestion('أي مجموعة مساوية لها؟',circleDots(n),
+    [n,n+1,n-1,n+2].map(x=>htmlChoice(tenFrame(x),x===n)),result,seed);
+  return makeQuestion('اختر المجموعة المساوية في العدد.',circleDots(n),
+    [n,n+1,n-1,n+2].map(x=>htmlChoice(circleDots(x),x===n)),result,seed);
  }
  if(skill==='moreLess'){
   const a=chooseNumber(2,6,i),b=a+(i%2?1:-1);
@@ -403,7 +406,7 @@ function generate(skill,i){const seed=i+5;
     if(i%4===2){const nums=readingAlternatives(n,max);
       return makeQuestion('عُدّ الدوائر، ثم اختر اسم العدد الصحيح.',circleDots(n),[...new Set(nums)].map(x=>strChoice(WORDS[x],x===n)),`هذه مجموعة من ${arabic(n)} دوائر، واسم العدد «${WORDS[n]}».`,seed);
     }
-    if(i%4===3){return numQ(`أي رمز يمثل عدد الدوائر؟`,n>5?tenFrame(n<=10?n:10):circleDots(n),n,1,max,seed,`العدد هو ${arabic(n)}.`);}
+    if(i%4===3){return numQ(`أي رمز يمثل عدد الدوائر؟`,circleDots(n),n,1,max,seed,`العدد هو ${arabic(n)}.`);}
     return makeQuestion(i>=4?`ما الرقم الذي نكتبه لتمثيل كلمة «${WORDS[n]}»؟`:`اقرأ اسم العدد «${WORDS[n]}»، ثم اختر رمزه.`,frameText(WORDS[n]),[...new Set(opts)].map(x=>strChoice(arabic(x),x===n)),`يُكتب العدد «${WORDS[n]}» هكذا: ${arabic(n)}.`,seed);
   }
   if(i%3===1){const alternatives=readingAlternatives(n,max);
@@ -449,30 +452,48 @@ function generate(skill,i){const seed=i+5;
    strChoice(names[0],correct===0),strChoice(names[1],false),strChoice(names[2],correct===2)],`في اتجاه الحظيرة، ${names[correct]} ${before?'قبل':'بعد'} ${names[1]}.`,seed);
  }
  if(skill==='patternFind'||skill==='patternBuild'||skill==='patternSolve'){
-  const cols=['red','blue','yellow'],length=skill==='patternSolve'?3:2,offset=i%length;const sequence=Array.from({length:6},(_,k)=>cols[(k+offset)%length]);const answer=cols[(6+offset)%length];
-  const correctLabel=answer==='red'?'أحمر':answer==='blue'?'أزرق':'أصفر';
-  if(skill==='patternBuild'){
-   const pairs=[['red','blue'],['yellow','blue'],['green','red']],pair=pairs[i%3],a=[pair[0],pair[1],pair[0],pair[1]];
-   const colorNames={red:'الأحمر',blue:'الأزرق',yellow:'الأصفر',green:'الأخضر'};
-   return makeQuestion('أكمل النمط الذي يتكرر فيه لونان بالتبادل.',patternVisual([...a,'?'],i>=3?'square':'circle'),[
-    htmlChoice(shape('circle','red'),pair[0]==='red'),htmlChoice(shape('circle','blue'),pair[0]==='blue'),htmlChoice(shape('circle','yellow'),pair[0]==='yellow'),htmlChoice(shape('circle','green'),pair[0]==='green')],`اللون التالي هو ${colorNames[pair[0]]}، لأن اللونين يتكرران بالتبادل.`,seed);
-  }
-  return makeQuestion('تأمل النمط، ثم اختر اللون التالي.',patternVisual([...sequence,'?'],i>=4?'triangle':i>=2?'square':'circle'),[
-   htmlChoice(shape('circle','red'),answer==='red'),htmlChoice(shape('circle','blue'),answer==='blue'),htmlChoice(shape('circle','yellow'),answer==='yellow')],`تتكرر الألوان حسب نمط ثابت، واللون التالي ${correctLabel}.`,seed);
+  const forms=['circle','square','triangle'],form=forms[Math.floor(i/2)%forms.length];
+  const colorNames={red:'الأحمر',blue:'الأزرق',yellow:'الأصفر',green:'الأخضر'};
+  const pairs=[['red','blue'],['yellow','green'],['green','red'],['blue','yellow']];
+  const triplets=[['red','blue','yellow'],['yellow','green','red'],['blue','red','green']];
+  const colors=skill==='patternSolve'?triplets[i%triplets.length]:pairs[i%pairs.length];
+  const length=skill==='patternSolve'?6:5,sequence=Array.from({length},(_,k)=>colors[k%colors.length]);
+  const answer=colors[length%colors.length];
+  const choices=['red','blue','yellow','green'].map(c=>htmlChoice(shape(form,c),c===answer));
+  return makeQuestion(skill==='patternBuild'?'أي شكل يكمل النمط؟':'أكمل النمط.',patternVisual([...sequence,'?'],form),
+    choices,'يأتي اللون '+colorNames[answer]+' بعد تكرار النمط.',seed);
  }
  if(skill==='pattern20'){
-  const start=11+(i%4)+Math.floor(i/4),step=1+(i%2),answer=start+step*3;
-  return numQ('ما العدد الذي يكمل هذا النمط العددي؟',visualSequence([start,start+step,start+step*2,'؟']),answer,10,20,seed,`نزيد ${arabic(step)} في كل خطوة، فيكون العدد التالي ${arabic(answer)}.`);
+  const start=11+(i%3),step=i%2?2:1,answer=start+step*3;
+  return numQ('أي عدد يكمل النمط؟',visualSequence([start,start+step,start+step*2,'؟']),answer,11,20,seed,
+    'نزيد '+arabic(step)+' في كل خطوة.');
  }
  if(skill==='compare10'||skill==='compare20'){
-  const max=skill==='compare10'?10:20,a=chooseNumber(1,max-1,i*3+1),b=i%4===0?a:chooseNumber(1,max,i*7+5),answer=a>b?'>':a<b?'<':'=';
-  return makeQuestion('قارن العددين، ثم اختر العلاقة الصحيحة بينهما.',`<div class="numbers-strip"><span>${arabic(a)}</span><span>؟</span><span>${arabic(b)}</span></div>`,[
-   strChoice('أكبر من (>)',answer==='>'),strChoice('أصغر من (<)',answer==='<'),strChoice('يساوي (=)',answer==='=')],`لأن ${arabic(a)} ${a>b?'أكبر من':a<b?'أصغر من':'يساوي'} ${arabic(b)}.`,seed);
+  const max=skill==='compare10'?10:20,a=chooseNumber(2,max-1,i*3+1),mode=i%5;
+  if(mode===4){
+    const values=[a-1,a,a+1];
+    return numQ('اختر العدد الأصغر.',visualSequence([values[1],values[2],values[0]]),
+      values[0],1,max,seed,'الأصغر هو '+arabic(values[0])+'.');
+  }
+  const b=mode===0?a:mode===1?a+1:a-1,relation=a>b?'>':a<b?'<':'=';
+  const view=mode===3?pairVisual(a,b):
+    '<div class="numbers-strip"><span>'+arabic(a)+'</span><span>؟</span><span>'+arabic(b)+'</span></div>';
+  return makeQuestion(mode===3?'قارن المجموعتين.':'اختر العلاقة الصحيحة.',view,[
+    strChoice('أكبر من (>)',relation==='>'),strChoice('أصغر من (<)',relation==='<'),
+    strChoice('يساوي (=)',relation==='=')],
+    arabic(a)+' '+(a>b?'أكبر من':a<b?'أصغر من':'يساوي')+' '+arabic(b)+'.',seed);
  }
  if(skill==='order10'||skill==='order20'){
-  const max=skill==='order10'?10:20,base=chooseNumber(1,max-3,i*2),nums=[base,base+2,base+1],right=[...nums].sort((a,b)=>a-b);
-  const orders=[right,[right[1],right[0],right[2]],[right[2],right[0],right[1]],[right[1],right[2],right[0]]];
-  return makeQuestion('اختر ترتيب الأعداد من الأصغر إلى الأكبر.',visualSequence(nums),orders.map((seq,k)=>strChoice(numberList(seq),k===0)),`الترتيب الصحيح هو: ${numberList(right)}.`,seed);
+  const max=skill==='order10'?10:20,count=i%3===2?4:3,step=i%2===0?1:2;
+  const base=chooseNumber(1,max-(count-1)*step,i*2);
+  const ascending=i%2===0,values=Array.from({length:count},(_,k)=>base+k*step);
+  const scrambled=values.slice(1).concat(values[0]);
+  const right=[...values].sort((a,b)=>ascending?a-b:b-a);
+  const swap=(arr,a,b)=>{const out=[...arr];[out[a],out[b]]=[out[b],out[a]];return out};
+  const orders=[right,swap(right,0,1),[...right].reverse(),right.slice(1).concat(right[0])];
+  return makeQuestion('رتب الأعداد من '+(ascending?'الأصغر إلى الأكبر':'الأكبر إلى الأصغر')+'.',
+    visualSequence(scrambled),orders.map((seq,k)=>strChoice(numberList(seq),k===0)),
+    'الترتيب: '+numberList(right)+'.',seed);
  }
  if(skill==='ordinal'){
   const marks=['🔵','🟨','⭐','🟩','🔴'],starPosition=i%5;const seq=[...marks.filter(x=>x!=='⭐')];seq.splice(starPosition,0,'⭐');
@@ -503,15 +524,26 @@ function questionsFor(lesson,count){
   const relevant=part==='prep'?chap.lessons.slice(0,Math.min(3,chap.lessons.length)):
     part==='mid'||part==='reviewMid'?chap.lessons.slice(0,Math.ceil(chap.lessons.length/2)):
     part==='cumulative'?CHAPTERS.filter(c=>c.id<=chap.id).flatMap(c=>c.lessons):chap.lessons;
-  for(let i=0;i<count;i++){const row=relevant[(i*7+Math.floor(i/3))%relevant.length];out.push(generate(row[2],i+Math.floor(i/2)));}
- }else for(let i=0;i<count;i++)out.push(generate(lesson.skill,i));
+  for(let i=0;i<count;i++){
+   const row=relevant[i%relevant.length];
+   let q=generate(row[2],i+Math.floor(i/relevant.length)*3);
+   for(let retry=1;retry<=12&&out.some(old=>old.prompt===q.prompt&&old.visual===q.visual);retry++)
+    q=generate(row[2],i+retry*relevant.length+1);
+   out.push(q);
+  }
+ }else for(let i=0;i<count;i++){
+   let q=generate(lesson.skill,i);
+   for(let retry=1;retry<=12&&out.some(old=>old.prompt===q.prompt&&old.visual===q.visual);retry++)
+    q=generate(lesson.skill,i+retry*count);
+   out.push(q);
+ }
  return out;
 }
 function beginLesson(id){const lesson=lessonRecord(id);if(!lesson){showToast('الدرس غير موجود');return;}
- session={lesson,questions:questionsFor(lesson,lesson.testType?8:6),index:0,score:0,selected:null};navigate('practice/'+id);
+ session={lesson,questions:questionsFor(lesson,lesson.testType?8:5),index:0,score:0,selected:null};navigate('practice/'+id);
 }
 function startView(id){const lesson=lessonRecord(id);if(!lesson)return renderCategory('lessons');
- if(!session||session.lesson.code!==id)session={lesson,questions:questionsFor(lesson,lesson.testType?8:6),index:0,score:0,selected:null};
+ if(!session||session.lesson.code!==id)session={lesson,questions:questionsFor(lesson,lesson.testType?8:5),index:0,score:0,selected:null};
  const s=session,question=s.questions[s.index];
  return `${pageHeader(lesson.title,`${lesson.chapter.title} • الصفحة ${arabic(lesson.page)} من الكتاب`,lesson.title)}<section class="practice-wrap">
  <div class="lesson-intro"><strong>🎯 اليوم سنتعلّم</strong><p>${lesson.objective}</p><span class="objective-tag">الصف الأول الابتدائي • الفصل ${arabic(lesson.chapter.id)}</span></div>
