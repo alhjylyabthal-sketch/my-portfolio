@@ -43,7 +43,7 @@
       ${lesson?`<div class="academy-notice-adventure"><span class="academy-adventure-symbol" aria-hidden="true">${lesson.chapter.icon||'🎈'}</span><div class="academy-adventure-copy"><strong>تحدي الرياضيات!</strong><span>العب، تعلّم، واجمع النجوم</span></div><button type="button" class="academy-adventure-play" data-ac-open-lesson="${acEscape(a.id)}">🎮 ابدأ المغامرة</button></div>`:''}
       <details class="academy-notice-task" ${full?'open':''}><summary>📝 ${full?'مهمتك بعد الدرس':'عرض المهمة المنزلية'}</summary><p>${acEscape(a.task).replace(/\n/g,'<br>')}</p></details>
       <div class="academy-notice-actions">
-        ${lesson?`<button class="academy-notice-primary" data-ac-open-lesson="${acEscape(a.id)}">🎮 العب مغامرة الدرس</button>`:''}
+        
         ${a.url?`<a class="academy-notice-secondary" href="${acEscape(a.url)}" target="_blank" rel="noopener noreferrer">🔗 افتح الرابط المرفق</a>`:''}
         ${full?`<button class="academy-notice-secondary" data-ac-share-notice="1">📤 مشاركة الإعلان</button>`:''}
       </div></div>`;
