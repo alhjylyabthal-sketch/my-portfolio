@@ -1,5 +1,5 @@
 /* Offline public academy shell; independent from Enjaz portfolio service worker. */
-const ACADEMY_CACHE='little-math-academy-shell-v4';
+const ACADEMY_CACHE='little-math-academy-shell-v5';
 const ACADEMY_ASSETS=['./','./index.html','./happy-games.css','./content-variety.js','./happy-games.js','./announcements.js','./academy-approved-visual.css','./academy-characters.webp','./academy-hero-art.webp','./academy-manifest.webmanifest','./academy-icon.svg'];
 self.addEventListener('install', event => {
  event.waitUntil(caches.open(ACADEMY_CACHE).then(cache=>cache.addAll(ACADEMY_ASSETS)).then(()=>self.skipWaiting()));
@@ -17,5 +17,5 @@ self.addEventListener('fetch', event => {
    caches.open(ACADEMY_CACHE).then(cache=>cache.put(event.request,copy)).catch(()=>{});
   }
   return response;
- }).catch(()=>caches.match(event.request).then(response=>response||caches.match('./index.html'))));
+ }).catch(()=>caches.match(event.request).then(response=>response||(event.request.mode==='navigate'?caches.match('./index.html'):Response.error()))));
 });
