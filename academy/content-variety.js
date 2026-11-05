@@ -5,6 +5,15 @@
 (function(){
 'use strict';
 const previous=questionsFor;
+/* A shortcut or shared lesson link is a game, not a copy of the lesson practice. */
+if(/^#\/?practice\//.test(location.hash||''))pageMode='games';
+document.addEventListener('click',function(event){
+ const target=event.target.closest?.('[data-lesson],[data-ac-open-lesson]');
+ if(target&&(target.closest?.('.playhome')||target.closest?.('.academy-notice-board')||target.hasAttribute('data-ac-open-lesson'))){
+  pageMode='games';
+ }
+},true);
+
 const pos=(n,m)=>((n%m)+m)%m;
 const word=(n)=>WORDS[n]||arabic(n);
 const correct=(n,low=0,high=20,seed=0)=>numericChoices(n,low,high,seed);
