@@ -1,0 +1,21 @@
+{
+  "id": "./",
+  "name": "أكاديمية الرياضيات الصغيرة",
+  "short_name": "أكاديمية الرياضيات",
+  "description": "مغامرات وألعاب الرياضيات للصف الأول الابتدائي",
+  "lang": "ar",
+  "dir": "rtl",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#fffaf1",
+  "theme_color": "#fff1df",
+  "icons": [
+    {
+      "src": "./academy-icon.svg",
+      "type": "image/svg+xml",
+      "sizes": "any",
+      "purpose": "any maskable"
+    }
+  ]
+}
