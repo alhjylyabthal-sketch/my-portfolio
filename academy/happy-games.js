@@ -53,7 +53,7 @@ return '<section class="playhome"><section class="playhero"><div class="playhero
 +'<div class="playhero-figures"><img class="academy-hero-art" src="./academy-hero-art.webp" alt="بدر ولولو يرحبان بك في أكاديمية الرياضيات الصغيرة" loading="eager"></div></section>'
  +buddyPicker()+miniNav()+'<div class="quick-links" hidden aria-hidden="true" style="display:none!important"></div>'
 +'<h2 class="play-section-head">🎮 اختر مغامرتك</h2>'+worlds('games',true)
-+ '<section class="play-progress"><strong>🌟 نجومي: '+arabic(done)+' / '+arabic(total)+'</strong><div class="track" role="progressbar" aria-label="تقدمي" aria-valuenow="'+pct+'" aria-valuemin="0" aria-valuemax="100"><span style="width:'+pct+'%"></span></div>'
++ '<section class="play-progress"><strong>🌟 دروسي المتقنة: '+arabic(done)+' / '+arabic(total)+'</strong><div class="track" role="progressbar" aria-label="تقدمي" aria-valuenow="'+pct+'" aria-valuemin="0" aria-valuemax="100"><span style="width:'+pct+'%"></span></div>'
 +'<button data-nav="evidence">شاهد إنجازاتي</button></section>'
 +'<p class="info-note" style="text-align:center">طلاب وطالبات الصف الأول الابتدائي • الفصل الدراسي الأول • المعلمة ابتهال الحجيلي</p></section>';
 };

@@ -301,9 +301,15 @@ questionsFor=function(lesson,requested){
   const chapters=p==='cumulative'?CHAPTERS.filter(x=>x.id<=c.id):[c];
   const all=chapters.flatMap(x=>x.lessons);
   return p==='prep'?all.slice(0,3):p==='mid'||p==='reviewMid'?all.slice(0,Math.ceil(all.length/2)):all;})():null;
+ const pools=test&&lesson.testType==='cumulative'
+  ?CHAPTERS.filter(ch=>ch.id<=lesson.chapter.id).map(ch=>ch.lessons):null;
  const seen=new Set(),out=[];
  for(let i=0;i<count;i++){
-  const row=test?rows[pos(i,rows.length)]:null;
+  // Spread assessments through the chapter instead of taking only its first six skills.
+  // Cumulative assessment picks from every completed chapter, rotating on retries.
+  const group=pools?pools[pos(i,pools.length)]:null;
+  const row=test?(group?group[pos(Math.floor(i/pools.length)+attempts,group.length)]
+      :rows[pos(Math.floor((i+0.5)*rows.length/count)+attempts,rows.length)]):null;
   const skill=row?row[2]:lesson.skill;
   const modeType=pos(i+(test?shift:0),5);
   let q=null;
@@ -312,7 +318,7 @@ questionsFor=function(lesson,requested){
    const next=pickQuestion(skill,modeType,seed);
    if(!next||!next.choices?.length||next.choices.filter(x=>x.correct).length!==1)continue;
    const key=tag(next);
-   if(!seen.has(key)){q=next;seen.add(key);break;}
+   if(!seen.has(key)){q=next;q.sourceSkill=skill;seen.add(key);break;}
   }
   if(q)out.push(q); // Less content is better than showing the same task twice.
  }
