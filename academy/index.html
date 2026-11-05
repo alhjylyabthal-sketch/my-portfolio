@@ -519,6 +519,8 @@ function generate(skill,i){const seed=i+5;
 }
 function questionsFor(lesson,count){
  const out=[];
+ // A new attempt receives a new set of examples while keeping the same skill.
+ const variant=(progress[lesson.code]?.attempts||0)*count;
  if(lesson.testType){
   const chap=lesson.chapter,part=lesson.testType;
   const relevant=part==='prep'?chap.lessons.slice(0,Math.min(3,chap.lessons.length)):
@@ -526,15 +528,15 @@ function questionsFor(lesson,count){
     part==='cumulative'?CHAPTERS.filter(c=>c.id<=chap.id).flatMap(c=>c.lessons):chap.lessons;
   for(let i=0;i<count;i++){
    const row=relevant[i%relevant.length];
-   let q=generate(row[2],i+Math.floor(i/relevant.length)*3);
+   let q=generate(row[2],i+Math.floor(i/relevant.length)*3+variant);
    for(let retry=1;retry<=12&&out.some(old=>old.prompt===q.prompt&&old.visual===q.visual);retry++)
-    q=generate(row[2],i+retry*relevant.length+1);
+    q=generate(row[2],i+retry*relevant.length+1+variant);
    out.push(q);
   }
  }else for(let i=0;i<count;i++){
-   let q=generate(lesson.skill,i);
+   let q=generate(lesson.skill,i+variant);
    for(let retry=1;retry<=12&&out.some(old=>old.prompt===q.prompt&&old.visual===q.visual);retry++)
-    q=generate(lesson.skill,i+retry*count);
+    q=generate(lesson.skill,i+retry*count+variant);
    out.push(q);
  }
  return out;
@@ -628,7 +630,7 @@ window.addEventListener('hashchange',render);
 window.addEventListener('DOMContentLoaded',()=>{render();});
 
 </script>
-<script src="./happy-games.js?v=8"></script>
+<script src="./happy-games.js?v=9"></script>
 <script src="announcements.js?v=6"></script>
 <script>
 if('serviceWorker' in navigator){
