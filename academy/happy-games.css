@@ -118,3 +118,25 @@ body .academy-adventure-copy strong{font-size:17px}
 body .academy-adventure-copy span{font-size:11px}
 body .academy-adventure-play{width:100%;padding:10px!important;font-size:15px}
 }
+
+
+/* اختيار الشخصية: بطاقات واضحة ولمسات ملائمة لطالبات الصف الأول */
+.playhero-figures .buddy-svg{width:min(93%,195px);max-height:240px;margin:0;filter:drop-shadow(0 11px 7px #45758d25)}
+.playhero-figures .buddy-svg:first-child,.playhero-figures .buddy-svg:last-child{transform:none}
+.buddy-pick{background:linear-gradient(118deg,#fff,#f0fbff);border:2px solid #d6edf4;padding:17px 14px 19px}
+.buddy-pick-copy p{margin:0 0 13px;color:#53738a;font-size:14px;font-weight:800;line-height:1.7}
+.buddy-pick-btns{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px;max-width:465px;margin:auto}
+.buddy-pick button{display:flex;flex-direction:column;gap:2px;min-width:0;min-height:163px;padding:9px 14px 12px;background:#fffaf0;border-color:#e4e9ef;cursor:pointer;transition:transform .15s ease,box-shadow .15s ease}
+.buddy-pick button svg{width:82px;height:92px}
+.buddy-pick button span{display:block;line-height:1.2}
+.buddy-pick button small{display:block;font-size:12px;color:#56788e;font-weight:850}
+.buddy-pick button[aria-pressed="true"]{border-color:#49bfc4;background:#e9fbf9;box-shadow:0 5px 0 #b8eae6}
+.buddy-pick button[aria-pressed="true"] small{color:#167c80}
+.buddy-pick button:active{transform:translateY(2px)}
+.buddy-pick button:focus-visible{outline:3px solid #d8a740;outline-offset:3px}
+.buddy-header-strip{display:flex;align-items:center;justify-content:center;gap:9px;border-radius:20px;padding:7px 13px;max-width:430px;margin:12px auto 0;background:linear-gradient(100deg,#e9fbff,#fff4d6);color:#28526b;font-weight:900;font-size:14px}
+.buddy-header-strip .buddy-svg{width:60px;min-width:60px}
+.buddy-celebrate{display:flex;align-items:center;justify-content:center;gap:9px;color:#28526b;font-weight:950;font-size:17px;margin-bottom:6px}
+.buddy-celebrate svg{width:75px;flex:none}
+@media(max-width:700px){.playhero-figures .buddy-svg{width:95%;max-height:175px}.buddy-pick button{min-height:148px}.buddy-pick button svg{width:74px;height:82px}.buddy-header-strip{font-size:12px}.buddy-celebrate svg{width:65px}}
+@media(max-width:375px){.playhero-figures .buddy-svg{width:94%}.buddy-pick-btns{gap:8px}.buddy-pick button{padding:7px 4px}.buddy-pick button svg{width:68px}}
