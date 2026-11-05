@@ -1,0 +1,59 @@
+/* Little Math Academy — approved visual identity, November 2026.
+   Real, responsive HTML elements; the artwork is not a screenshot of the page. */
+:root{--academy-navy:#122d56;--academy-teal:#008f9e;--academy-gold:#e5ac35}
+body{background:linear-gradient(165deg,#fffefa 0%,#fffcf5 55%,#eafbff 100%);color:var(--academy-navy)}
+.playhome{max-width:1080px;padding:14px 0 30px}
+.playhero{display:grid;grid-template-columns:minmax(0,1.03fr) minmax(0,.97fr);direction:rtl;gap:12px;min-height:320px;padding:22px 23px;align-items:center;border:2px solid #fff;border-radius:34px;background:radial-gradient(circle at 72% 14%,#fff4b5 0%,transparent 24%),linear-gradient(126deg,#eafaff 1%,#fffdfa 40%,#fff6d9 71%,#ffedf3 100%);box-shadow:0 9px 0 #dceef3,0 18px 30px #122d561b;overflow:hidden}
+.playhero-copy{position:relative;z-index:1;text-align:right}
+.playhero .hey{color:#aa7439;background:#fff;border:1px solid #f5dfbd;border-radius:30px;padding:6px 14px;font-size:clamp(11px,1.5vw,14px);box-shadow:0 3px 7px #b7883a10;margin-bottom:12px}
+.playhero h1{color:var(--academy-navy);font-size:clamp(25px,4.25vw,47px);font-weight:1000;line-height:1.35;max-width:510px;letter-spacing:-.7px}
+.playhero h1 span{position:relative;z-index:0;white-space:nowrap}.playhero h1 span::before{content:"";background:linear-gradient(90deg,#ffdf82,#ffbe36);position:absolute;inset:auto -6px 0 -6px;height:48%;border-radius:14px;z-index:-1;transform:rotate(-1deg)}
+.playhero h1 em{display:inline-block;color:#0798a9;font-style:normal}
+.playhero p{font-weight:800;color:#335473;line-height:1.6;margin:8px 0 20px;font-size:clamp(13px,2vw,19px)}
+.playbigbutton{background:linear-gradient(180deg,#ffce65,#efa52f);color:#152f54;border:2px solid #fff0bc;border-radius:22px;font-size:clamp(13px,2vw,19px);min-height:54px;box-shadow:0 6px 0 #bd852e,0 12px 18px #6a4c1420;padding:9px 22px;line-height:1.5;white-space:normal}
+.playbigbutton:hover{filter:brightness(1.04)}.playbigbutton:focus-visible,.buddy-pick button:focus-visible,.play-mininav button:focus-visible{outline:3px solid #058c9e;outline-offset:3px}
+.playhero-figures{height:300px;min-height:0;display:flex;align-items:end;justify-content:center;overflow:hidden;border-radius:0 0 20px 20px;position:relative}
+.academy-hero-art{width:100%;height:100%;object-fit:contain;object-position:bottom center;filter:drop-shadow(0 8px 13px #284f6a20)}
+.buddy-art{display:block;flex-shrink:0;width:220px;height:211px;max-width:100%;background-image:url('./academy-characters.webp');background-repeat:no-repeat;background-size:200% 100%;background-position:center;animation:happy-bob 3.5s ease-in-out infinite}
+.buddy-art-boy{background-position:0 center}.buddy-art-girl{background-position:100% center}
+.buddy-pick{border:2px solid #dcebf0;border-radius:30px;padding:23px;margin:22px 0 20px;background:linear-gradient(145deg,#fff,#f4fcff);box-shadow:0 8px 0 #e8f1f5,0 18px 28px #1437570b}
+.buddy-pick-copy strong{font-size:clamp(20px,3.4vw,28px);color:var(--academy-navy);margin:2px 0 6px}
+.buddy-pick-copy p{margin:5px 0 21px;color:#637c8f;font-size:clamp(13px,2vw,16px);font-weight:700}
+.buddy-pick-btns{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;max-width:770px;margin:0 auto;flex-wrap:nowrap}
+.buddy-pick button{display:flex;flex-direction:column;gap:6px;justify-content:space-between;min-width:0;min-height:245px;width:100%;padding:13px 10px 14px;border:3px solid #e2e8ed;border-radius:30px;background:linear-gradient(160deg,#f9f4e9,#fffdf5);box-shadow:0 5px 0 #e5eaf0;font-size:19px;overflow:hidden;transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease}
+.buddy-pick button[data-buddy="lulu"]{background:linear-gradient(165deg,#fff0f5,#fff9fa)}
+.buddy-pick button[aria-pressed="true"]{border-color:#38b5c0;box-shadow:0 6px 0 #b8e8e9,0 0 0 2px #b5edef45}
+.buddy-pick button[aria-pressed="true"]:after{content:"✓";position:absolute;top:9px;left:12px;border:2px solid #fff;color:#fff;background:linear-gradient(#d4a64b,#ac7e26);border-radius:50%;width:28px;height:28px;line-height:25px;font-size:18px;box-shadow:0 2px 4px #15334d2a}
+.buddy-pick button{position:relative}.buddy-pick button:hover{transform:translateY(-3px)}
+.buddy-pick button .buddy-art{height:175px;width:min(100%,245px);margin:0 auto;max-width:100%;background-size:200% 100%;animation:none;border-radius:20px 20px 5px 5px}
+.buddy-pick button>span:not(.buddy-art){font-size:22px;color:var(--academy-navy);font-weight:1000;line-height:1.3}
+.buddy-pick button>small{color:#657c91;font-weight:800;font-size:13px}
+.play-mininav{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:21px 0 30px}
+.play-mininav button{border:4px solid #fff;box-shadow:0 7px 0 #ccecf2;border-radius:25px;background:#e5f8ff;min-height:110px;padding:12px 6px;font-size:clamp(13px,2vw,18px);color:var(--academy-navy)}
+.play-mininav button:nth-child(2){background:#fff0c6;box-shadow:0 7px 0 #f2d89c}.play-mininav button:nth-child(3){background:#ffe9f2;box-shadow:0 7px 0 #ebcedc}.play-mininav button:nth-child(4){background:#e2f7eb;box-shadow:0 7px 0 #c6e8d6}
+.play-mininav button span{font-size:clamp(24px,4vw,36px);filter:drop-shadow(0 3px 1px #203a4818)}
+.play-section-head{font-weight:1000;color:var(--academy-navy);margin-top:30px}
+.play-chapter{border-radius:26px;min-height:170px}.play-chapter .world-name{color:var(--academy-navy)}
+.play-progress{border:2px solid #dbeef3;box-shadow:0 4px 12px #21425c13}
+.buddy-header-strip .buddy-art{width:80px;height:80px;animation:happy-bob 3.5s ease-in-out infinite}
+.play-scene .buddy-art{width:106px;height:103px;align-self:center}
+.buddy-celebrate .buddy-art{width:140px;height:130px;margin:auto}
+.academy-buddy-dialog-choices .buddy-art{width:150px;height:140px;margin:auto}
+.academy-buddy-dialog-choices button{min-width:130px}
+.academy-notice-board{background:linear-gradient(140deg,#fffefa,#fffdf3 70%,#effcfc)!important;border:2px solid #e4ecf0!important;border-radius:29px!important;box-shadow:0 8px 0 #e4f1ef,0 16px 25px #17385510!important;padding:24px!important;margin-top:16px!important}
+.academy-notice-board:before{height:7px!important;background:linear-gradient(90deg,#0a8d8c,#f0c34f,#0a8d8c)!important}
+.academy-notice-head h2{font-weight:1000;color:var(--academy-navy)}
+.academy-notice-icon{font-size:35px!important;background:#e7f9f8!important}
+@media(max-width:640px){
+ .playhome{padding:4px 0 26px}.playhero{grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);gap:5px;min-height:220px;padding:17px 12px;border-radius:26px}
+ .playhero .hey{padding:5px 9px;margin-bottom:9px;font-size:11px}.playhero h1{font-size:clamp(21px,5.8vw,34px);letter-spacing:-.8px}
+ .playhero h1 span{white-space:normal}.playhero p{font-size:12px;margin:7px 0 14px}.playbigbutton{font-size:13px;min-height:46px;padding:8px 12px;border-radius:17px}
+ .playhero-figures{height:230px}.academy-hero-art{object-position:bottom center}
+ .buddy-pick{margin:18px 0;padding:17px 13px 19px;border-radius:24px}.buddy-pick-copy p{margin-bottom:15px}
+ .buddy-pick-btns{gap:11px}.buddy-pick button{min-height:205px;padding:8px 5px 10px;border-radius:22px}
+ .buddy-pick button .buddy-art{height:137px;width:100%}.buddy-pick button>span:not(.buddy-art){font-size:18px}
+ .play-mininav{gap:7px;margin:15px 0 21px}.play-mininav button{min-height:78px;padding:7px 2px;border-radius:17px;border-width:3px;font-size:12px}.play-mininav button span{font-size:25px}
+ .academy-notice-board{padding:18px 14px!important}.play-chapters{gap:9px}.play-chapter{min-height:148px;padding:12px 4px}.play-chapter .world-emoji{font-size:39px}.play-chapter .world-name{font-size:15px}.play-chapter .world-sub{font-size:11px}
+}
+@media(max-width:380px){.playhero{grid-template-columns:1.1fr .9fr}.playhero h1{font-size:22px}.playhero-figures{height:196px}.playhero p{font-size:11px}.playbigbutton{font-size:12px}.buddy-pick button .buddy-art{height:118px}.buddy-pick button{min-height:181px}}
+@media(prefers-reduced-motion:reduce){.buddy-art{animation:none}.buddy-pick button,.play-chapter{transition:none}}

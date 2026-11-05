@@ -2,7 +2,7 @@
 (function () {
   'use strict';
   const KEY='academy-teacher-notice-v1', SESSION_KEY='academy-visitor-notice-v1';
-  const TODAY_NOTICE={"title":"مقارنة الأعداد حتى ١٠","task":"١. افتحي تدريب «مقارنة الأعداد حتى ١٠» في الأكاديمية وحلّي أسئلته.\n٢. في دفتر الرياضيات: اكتبي العدد الأكبر من كل زوج: (٧، ٤) و(٥، ٩).\n٣. اكتبي العدد الأصغر من كل زوج: (٨، ٦) و(٢، ١٠).\n٤. ضعي الرمز المناسب (أكبر من، أصغر من، يساوي): ٦ ◯ ٣ ، ٤ ◯ ٤.","id":"4-6","date":"2026-11-04","url":""};
+  const TODAY_NOTICE={"title":"مقارنة الأعداد حتى ١٠","task":"١. افتحوا تدريب «مقارنة الأعداد حتى ١٠» في الأكاديمية وحلّوا أسئلته.\n٢. في دفتر الرياضيات: اكتبوا العدد الأكبر من كل زوج: (٧، ٤) و(٥، ٩).\n٣. اكتبوا العدد الأصغر من كل زوج: (٨، ٦) و(٢، ١٠).\n٤. ضعوا الرمز المناسب (أكبر من، أصغر من، يساوي): ٦ ◯ ٣ ، ٤ ◯ ٤.","id":"4-6","date":"2026-11-04","url":""};
   const acEscape=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const today=()=>{const d=new Date();return new Date(d.getTime()-d.getTimezoneOffset()*60000).toISOString().slice(0,10)};
   const acRoot=()=>location.href.split('#')[0].split('?')[0];
@@ -64,12 +64,12 @@
     return `<div class="academy-notice-page">
       <div class="academy-notice-top"><button class="academy-notice-back" data-nav="home">← العودة إلى الأكاديمية</button>
         <span class="academy-notice-pill">للمعلمة</span></div>
-      <h1>📣 إعداد إعلان الحصة</h1><p class="academy-notice-lead">اختاري الدرس، واكتبي مهمة الطالبات، ثم أرسلي رابط الإعلان للأهالي.</p>
+      <h1>📣 إعداد إعلان الحصة</h1><p class="academy-notice-lead">اختاري الدرس، واكتبي مهمة الطلاب والطالبات، ثم أرسلي رابط الإعلان للأهالي.</p>
       <form id="academyNoticeForm" class="academy-notice-form">
         <label>تاريخ الحصة <input type="date" name="date" required value="${acEscape(a.date)}"></label>
         <label>اختاري الدرس <select name="id" id="academyNoticeLesson">${lessonOptions()}</select></label>
         <label>عنوان الإعلان <input name="title" required maxlength="110" placeholder="مثال: تعلّم الأعداد ٩ و١٠" value="${acEscape(a.title)}"></label>
-        <label>مهمة الطالبة <textarea name="task" required maxlength="500" rows="4" placeholder="مثال: حلّ تدريب الدرس ثم كتابة العددين في الدفتر.">${acEscape(a.task)}</textarea></label>
+        <label>مهمة اليوم <textarea name="task" required maxlength="500" rows="4" placeholder="مثال: حلّ تدريب الدرس ثم كتابة العددين في الدفتر.">${acEscape(a.task)}</textarea></label>
         <label>رابط إضافي (اختياري) <input name="url" inputmode="url" dir="ltr" placeholder="https://..." value="${acEscape(a.url)}"><small>يمكنك إضافة رابط فيديو أو ورقة عمل أو أي صفحة إلكترونية آمنة.</small></label>
         <div class="academy-notice-form-actions"><button type="submit" class="academy-notice-primary">📨 تجهيز الإعلان للمشاركة</button>
         <button type="button" class="academy-notice-secondary" data-ac-share-lesson="1">🔗 نسخ رابط الدرس فقط</button></div>
@@ -133,7 +133,7 @@
     try{localStorage.setItem(KEY,JSON.stringify(a));localStorage.setItem('academy-teacher-notice-edit-ts',String(Date.now()))}catch{}
     const link=acRoot()+'#notice/'+encodeNotice(a);
     const box=document.getElementById('academyNoticePreview');
-    if(box){box.innerHTML=`<h2>✅ الإعلان جاهز للإرسال</h2><p>أرسلي هذا الرابط لقروب الصف؛ سيفتح الدرس والمهمة عند الطالبات.</p>
+    if(box){box.innerHTML=`<h2>✅ الإعلان جاهز للإرسال</h2><p>أرسلي هذا الرابط لقروب الصف؛ سيفتح الدرس والمهمة عند الطلاب والطالبات.</p>
       <div class="academy-notice-form-actions"><button type="button" class="academy-notice-primary" data-ac-share-notice="1">📤 إرسال إعلان الحصة</button>
       <button type="button" class="academy-notice-secondary" data-ac-copy-notice="1">🔗 نسخ رابط الإعلان</button></div>`;box.dataset.link=link;}
     showToast('تم تجهيز الإعلان');
@@ -146,7 +146,7 @@
       const l=lessonById(id);if(!l){showToast('اختاري درسًا أولًا');return;}
       await copyText(acLessonLink(l.code));return;}
     if(b.dataset.acCopyNotice){const a=savedNotice(KEY);if(a)await copyText(acRoot()+'#notice/'+encodeNotice(a));return;}
-    if(b.dataset.acShareNotice){const a=savedNotice(SESSION_KEY)||savedNotice(KEY);if(a)await shareUrl(acRoot()+'#notice/'+encodeNotice(a),'إعلان حصة الرياضيات',`${a.title}\nمهمة الطالبة: ${a.task}`);return;}
+    if(b.dataset.acShareNotice){const a=savedNotice(SESSION_KEY)||savedNotice(KEY);if(a)await shareUrl(acRoot()+'#notice/'+encodeNotice(a),'إعلان حصة الرياضيات',`${a.title}\nمهمة اليوم: ${a.task}`);return;}
   });
   const styles=`
     .academy-notice-board,.academy-notice-page{--ac-navy:#183957;--ac-gold:#d9af47;--ac-teal:#127e7c;color:var(--ac-navy)}
