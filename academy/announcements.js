@@ -146,7 +146,7 @@
     const a=formData();if(!a){showToast('أكملي عنوان الإعلان والمهمة والتاريخ');return;}
     try{localStorage.setItem(KEY,JSON.stringify(a));localStorage.setItem('academy-teacher-notice-edit-ts',String(Date.now()))}catch{}
     const issueTitle='[نشر مغامرة] '+a.title;
-    const issueBody='ACADEMY_NOTICE_V1\\n'+JSON.stringify(a);
+    const issueBody='ACADEMY_NOTICE_V1\n'+JSON.stringify(a);
     const publishLink='https://github.com/alhjylyabthal-sketch/my-portfolio/issues/new?title='
       +encodeURIComponent(issueTitle)+'&body='+encodeURIComponent(issueBody);
     const box=document.getElementById('academyNoticePreview');
