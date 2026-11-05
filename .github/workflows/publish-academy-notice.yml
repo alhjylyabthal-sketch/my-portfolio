@@ -1,0 +1,73 @@
+name: نشر مغامرة الأكاديمية
+
+on:
+  issues:
+    types: [opened]
+
+permissions:
+  contents: write
+  issues: write
+
+jobs:
+  publish:
+    if: github.event.issue.user.login == github.repository_owner && startsWith(github.event.issue.title, '[نشر مغامرة]')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout academy
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+
+      - name: Validate the announcement and publish public notice
+        run: |
+          python3 - <<'PY'
+          import os, json, re, pathlib, datetime
+          event = json.loads(pathlib.Path(os.environ['GITHUB_EVENT_PATH']).read_text(encoding='utf-8'))
+          issue = event.get('issue') or {}
+          body = issue.get('body') or ''
+          header = 'ACADEMY_NOTICE_V1\n'
+          if not body.startswith(header):
+              raise ValueError('Invalid announcement format')
+          notice = json.loads(body[len(header):].strip())
+          if not isinstance(notice, dict):
+              raise ValueError('Announcement must be an object')
+          allowed = {'date','title','task','id','url'}
+          if set(notice) != allowed:
+              raise ValueError('Unexpected announcement fields')
+          title, task = notice['title'], notice['task']
+          if not isinstance(title, str) or not 1 <= len(title.strip()) <= 110:
+              raise ValueError('Invalid title')
+          if not isinstance(task, str) or not 1 <= len(task.strip()) <= 500:
+              raise ValueError('Invalid task')
+          day = notice['date']
+          if not isinstance(day, str) or not re.fullmatch(r'\d{4}-\d{2}-\d{2}', day):
+              raise ValueError('Invalid date')
+          datetime.date.fromisoformat(day)
+          code = notice['id']
+          if not isinstance(code, str) or (code and not re.fullmatch(r'[1-6]-[0-9]{1,2}', code)):
+              raise ValueError('Invalid lesson id')
+          url = notice['url']
+          if not isinstance(url, str) or len(url) > 500 or (url and not re.fullmatch(r'https://[^\s<>"\']+', url)):
+              raise ValueError('Invalid URL')
+          clean = {k: str(notice[k]).strip() for k in ('title','task','id','date','url')}
+          pathlib.Path('academy/live-notice.json').write_text(
+              json.dumps(clean, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+          PY
+
+      - name: Commit public announcement
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add academy/live-notice.json
+          if ! git diff --cached --quiet; then
+            git commit -m "Publish Academy adventure from teacher dashboard"
+            git push
+          fi
+
+      - name: Confirm publication
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          gh issue comment "${{ github.event.issue.number }}" --body "✅ نُشرت المهمة في الأكاديمية. [افتحي الرابط الدائم](https://alhjylyabthal-sketch.github.io/my-portfolio/academy/)"
+          gh issue close "${{ github.event.issue.number }}"
