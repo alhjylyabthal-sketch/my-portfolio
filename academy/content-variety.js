@@ -183,7 +183,7 @@ questionsFor=function(lesson,requested){
   return p==='prep'?all.slice(0,3):p==='mid'||p==='reviewMid'?all.slice(0,Math.ceil(all.length/2)):all;})():null;
  const seen=new Set(),out=[];
  for(let i=0;i<count;i++){
-  const row=test?rows[pos(i*3,rows.length)]:null;
+  const row=test?rows[pos(i,rows.length)]:null;
   const skill=row?row[2]:lesson.skill;
   const modeType=pos(i+(test?shift:0),5);
   let q=null;
