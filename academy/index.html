@@ -531,13 +531,13 @@ function questionsFor(lesson,count){
    let q=generate(row[2],i+Math.floor(i/relevant.length)*3+variant);
    for(let retry=1;retry<=12&&out.some(old=>old.prompt===q.prompt&&old.visual===q.visual);retry++)
     q=generate(row[2],i+retry*relevant.length+1+variant);
-   out.push(q);
+   if(!out.some(old=>old.prompt===q.prompt&&old.visual===q.visual))out.push(q);
   }
  }else for(let i=0;i<count;i++){
    let q=generate(lesson.skill,i+variant);
    for(let retry=1;retry<=12&&out.some(old=>old.prompt===q.prompt&&old.visual===q.visual);retry++)
     q=generate(lesson.skill,i+retry*count+variant);
-   out.push(q);
+   if(!out.some(old=>old.prompt===q.prompt&&old.visual===q.visual))out.push(q);
  }
  return out;
 }
