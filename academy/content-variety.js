@@ -1,0 +1,201 @@
+
+/* Academy question audit: distinct short tasks, not repeated drills.
+   Works with the original Saudi Grade 1 lesson and answer generators.
+   Does not modify local progress, student data, artwork or navigation. */
+(function(){
+'use strict';
+const previous=questionsFor;
+const pos=(n,m)=>((n%m)+m)%m;
+const word=(n)=>WORDS[n]||arabic(n);
+const correct=(n,low=0,high=20,seed=0)=>numericChoices(n,low,high,seed);
+const tag=(q)=>{
+ const answer=q.choices?.find(x=>x.correct);
+ return [q.prompt,q.visual.replace(/\sstyle="[^"]*"/g,''),answer?.text||answer?.html||''].join('|');
+};
+function optionsFor(n,lo,hi,seed,asWords=false){
+ let values=[n],d=1;
+ while(values.length<4&&d<=20){
+  if(n+d<=hi)values.push(n+d);
+  if(values.length<4&&n-d>=lo)values.push(n-d);
+  d++;
+ }
+ return reorder([...new Set(values)].map(v=>({text:asWords?word(v):arabic(v),correct:v===n})),seed);
+}
+function picture(n,icon='🍎'){
+ return '<div class="count-container" role="img" aria-label="'+arabic(n)+' أشياء"><div class="dots">'+
+ Array.from({length:n},()=>'<span style="font-size:27px">'+icon+'</span>').join('')+'</div></div>';
+}
+function sumVisual(a,b){
+ return '<div class="count-container">'+circleDots(a)+'<strong style="font-size:30px">+</strong>'+circleDots(b)+'</div>';
+}
+function numberTask(skill,type,seed){
+ const [lo,hi]=rangeOf(skill),n=chooseNumber(lo,hi,seed);
+ const readable=isRead(skill),unit=pos(type,5);
+ if(readable){
+  if(unit===0)return makeQuestion('كيف نقرأ العدد '+arabic(n)+'؟',frameText(arabic(n)),optionsFor(n,1,Math.max(hi,5),seed,true),'نقرأه '+word(n)+'.',seed);
+  if(unit===1)return numQ('اختر رمز العدد «'+word(n)+'».',frameText(word(n)),n,1,hi,seed,'نكتب '+word(n)+' هكذا: '+arabic(n)+'.');
+  if(unit===2)return makeQuestion('ما اسم العدد الذي تمثله الدوائر؟',circleDots(n),optionsFor(n,1,Math.max(hi,5),seed,true),'اسم العدد '+word(n)+'.',seed);
+  if(unit===3)return numQ('كم عدد القطع الموضحة؟',n>10?'<div class="count-container">'+tenFrame(10)+tenFrame(n-10)+'</div>':tenFrame(n),n,1,hi,seed,'عددها '+arabic(n)+'.');
+  return makeQuestion('اختر الاسم المناسب للعدد المكتوب.',visualSequence([n]),optionsFor(n,1,Math.max(hi,5),seed,true),'يُقرأ '+word(n)+'.',seed);
+ }
+ if(unit===0)return numQ('أعدّ الأشياء، ثم اختر العدد.',picture(n,'🍎'),n,1,hi,seed,'عدد التفاحات '+arabic(n)+'.');
+ if(unit===1){
+  const vals=[n];for(let d=1;vals.length<4&&d<=20;d++){
+   if(n-d>=1)vals.push(n-d);if(vals.length<4&&n+d<=hi)vals.push(n+d);
+  }
+  return makeQuestion('أي مجموعة تمثل '+arabic(n)+'؟',frameText(arabic(n)),
+    [...new Set(vals)].map(x=>htmlChoice(circleDots(x),x===n)),'المجموعة الصحيحة فيها '+arabic(n)+' عناصر.',seed);
+ }
+ if(unit===2){
+  let visual=n>10?'<div class="count-container">'+tenFrame(10)+tenFrame(n-10)+'</div>':tenFrame(n);
+  return numQ('كم عدادًا ملونًا في الإطار؟',visual,n,1,hi,seed,'العدادات الملونة '+arabic(n)+'.');
+ }
+ if(unit===3)return numQ('ما العدد الذي يمثله هذا الرسم؟',picture(n,'⭐'),n,1,hi,seed,'عدد النجوم '+arabic(n)+'.');
+ return makeQuestion('اختر العدد المكتوب بالكلمات.',frameText(arabic(n)),
+    optionsFor(n,1,Math.max(hi,5),seed,true),'هو '+word(n)+'.',seed);
+}
+function orderingTask(skill,type,seed){
+ const max=skill==='order10'?10:20,unit=pos(type,5);
+ const step=(unit===1||unit===4)?2:1;
+ const count=unit===3||unit===4?4:3;
+ const maxBase=Math.max(1,max-step*(count-1));
+ const start=chooseNumber(1,maxBase,seed*3+unit);
+ const nums=Array.from({length:count},(_,i)=>start+i*step);
+ const shown=nums.slice(1).concat(nums[0]);
+ if(unit===2){
+  const answer=nums[1],visual=visualSequence([nums[0],'؟',nums[2]]);
+  return numQ('ما العدد الناقص في الترتيب؟',visual,answer,1,max,seed,'العدد الناقص '+arabic(answer)+'.');
+ }
+ const asc=unit===0||unit===3,ordered=asc?nums:[...nums].reverse();
+ const value=(v)=>numberList(v);
+ const swap=(arr,i,j)=>{let cp=[...arr];[cp[i],cp[j]]=[cp[j],cp[i]];return cp;};
+ const raw=[ordered,swap(ordered,0,1),[...ordered].reverse(),ordered.slice(1).concat(ordered[0])];
+ const opts=[...new Map(raw.map((v,i)=>[value(v),strChoice(value(v),i===0)])).values()];
+ return makeQuestion(
+   unit===0?'رتّب البطاقات من الأصغر إلى الأكبر.':
+   unit===1?'رتّب الأعداد غير المتتالية تنازليًا.':
+   unit===3?'ما ترتيب الأعداد الأربعة تصاعديًا؟':'رتّب البطاقات الأربعة من الأكبر إلى الأصغر.',
+   visualSequence(shown),opts,'الترتيب الصحيح: '+value(ordered)+'.',seed);
+}
+function comparisonTask(skill,type,seed){
+ const max=skill==='compare10'?10:20,unit=pos(type,5);
+ const a=chooseNumber(2,max-2,seed*3);
+ const b=a+1+(seed%2);
+ if(unit===0)return numQ('أي العددين أكبر؟',visualSequence([a,b]),b,1,max,seed,'الأكبر هو '+arabic(b)+'.');
+ if(unit===1)return numQ('أي عدد هو الأصغر؟',visualSequence([b,a,a-1]),a-1,1,max,seed,'الأصغر هو '+arabic(a-1)+'.');
+ if(unit===2)return makeQuestion('أي رمز مناسب بين العددين؟',
+   '<div class="numbers-strip"><span>'+arabic(a)+'</span><span>؟</span><span>'+arabic(b)+'</span></div>',
+   [strChoice('أكبر من (>)',false),strChoice('أصغر من (<)',true),strChoice('يساوي (=)',false)],
+   arabic(a)+' أصغر من '+arabic(b)+'.',seed);
+ if(unit===3)return makeQuestion('أي مجموعة فيها عناصر أكثر؟',pairVisual(a,b),
+   [strChoice('المجموعة (أ)',false),strChoice('المجموعة (ب)',true)],
+   'المجموعة (ب) فيها '+arabic(b)+' عناصر، وهي الأكثر.',seed);
+ return makeQuestion('قارن العدد بالعدد نفسه.',
+   visualSequence([a,'؟',a]),
+   [strChoice('أكبر من (>)',false),strChoice('أصغر من (<)',false),strChoice('يساوي (=)',true)],
+   'عند تساوي العددين نختار يساوي.',seed);
+}
+function patternTask(skill,type,seed){
+ const unit=pos(type,5),colors=['red','blue','green','yellow'];
+ const order=colors.slice(pos(seed,4)).concat(colors.slice(0,pos(seed,4)));
+ const form=['circle','square','triangle'][pos(seed+unit,3)];
+ let sequence,answer,prompt;
+ if(unit===0){
+  sequence=[order[0],order[1],order[0],order[1],'?'];
+  answer=order[0];prompt='أكمل نمط اللونين.';
+ }else if(unit===1){
+  sequence=[order[0],order[0],order[1],order[0],'?',order[1]];
+  answer=order[0];prompt='ما الشكل الناقص في وسط النمط؟';
+ }else if(unit===2){
+  sequence=[order[0],order[1],order[2],order[0],order[1],'?'];
+  answer=order[2];prompt='لاحظ الألوان الثلاثة، ماذا يأتي؟';
+ }else if(unit===3){
+  sequence=[order[0],order[1],order[1],order[0],'?',order[1]];
+  answer=order[1];prompt='أكمل نمط (واحد، اثنان).';
+ }else{
+  sequence=[order[1],order[0],order[1],order[0],'?'];
+  answer=order[1];prompt='اختر الشكل الذي يواصل التكرار.';
+ }
+ return makeQuestion(prompt,patternVisual(sequence,form),
+  colors.map(c=>htmlChoice(shape(form,c),c===answer)),'انظر إلى الوحدة المتكررة ثم أكمل.',seed);
+}
+function additionTask(skill,type,seed){
+ const unit=pos(type,5);
+ let a=chooseNumber(1,5,seed*2),b=chooseNumber(1,5,seed*3+1);
+ if(skill==='addZero'){if(seed%2===0)a=0;else b=0;}
+ const total=a+b,visual=sumVisual(a,b);
+ if(skill==='verticalAdd'){
+  return numQ('اجمع الأعداد المكتوبة رأسيًا.',
+    '<div class="math-vertical"><div>'+arabic(a)+'</div><div class="under">+ '+arabic(b)+'</div><div>؟</div></div>',
+    total,0,12,seed,arabic(a)+' + '+arabic(b)+' = '+arabic(total)+'.');
+ }
+ if(unit===0)return numQ('كم عنصرًا في المجموعتين معًا؟',visual,total,0,12,seed,'المجموع '+arabic(total)+'.');
+ if(unit===1)return makeQuestion('اختر جملة الجمع التي تناسب الصورة.',visual,
+   operationsChoices(a,b,total,seed),'الجملة الصحيحة: '+arabic(a)+' + '+arabic(b)+' = '+arabic(total)+'.',seed);
+ if(unit===2)return numQ('ما العدد الناقص في جملة الجمع؟',
+   frameText(arabic(a)+' + ؟ = '+arabic(total)),b,0,12,seed,
+   arabic(a)+' + '+arabic(b)+' = '+arabic(total)+'.');
+ if(unit===3)return numQ('أعدّ جميع العناصر بعد جمع المجموعتين.',picture(a,'🔵')+' '+picture(b,'🟡'),total,0,12,seed,'المجموع '+arabic(total)+'.');
+ return numQ('أوجد ناتج الجمع.',frameText(arabic(a)+' + '+arabic(b)+' = ؟'),
+   total,0,12,seed,'الناتج '+arabic(total)+'.');
+}
+function composingTask(skill,type,seed){
+ const unit=pos(type,4),bounds=skill==='compose456'?[4,6]:skill==='compose789'?[7,9]:[10,12];
+ const n=chooseNumber(bounds[0],bounds[1],seed),part=1+pos(seed+unit,n-1),missing=n-part;
+ if(unit===0)return numQ('أكمل العدد الناقص.',frameText(arabic(part)+' + ؟ = '+arabic(n)),missing,0,12,seed,arabic(part)+' + '+arabic(missing)+' = '+arabic(n)+'.');
+ if(unit===1)return numQ('كم قطعة نضيف ليصبح المجموع '+arabic(n)+'؟',
+   circleDots(part),missing,0,12,seed,'نضيف '+arabic(missing)+' قطع.',seed);
+ if(unit===2)return makeQuestion('أي جملة جمع تكوّن العدد '+arabic(n)+'؟',frameText(arabic(n)),
+   [strChoice(arabic(part)+' + '+arabic(missing),true),
+    strChoice(arabic(part)+' + '+arabic(Math.max(0,missing-1)),false),
+    strChoice(arabic(part)+' + '+arabic(missing+1),false)],
+   'نكوّن العدد '+arabic(n)+' من '+arabic(part)+' و'+arabic(missing)+'.',seed);
+ return numQ('كم عنصرًا نحتاج لإكمال المجموعة؟',
+   '<div class="count-container">'+circleDots(part)+'<strong>+ ؟ = '+arabic(n)+'</strong></div>',
+   missing,0,12,seed,'العدد الناقص '+arabic(missing)+'.');
+}
+function ordinalTask(type,seed){
+ const names=['🔴','🟡','🟢','🔵','⭐'];
+ const offset=pos(seed,5),arr=names.slice(offset).concat(names.slice(0,offset));
+ const target=arr.indexOf('⭐'),right=pos(type,2)===0,ordinal=right?target+1:5-target;
+ return numQ('من جهة '+(right?'اليمين':'اليسار')+'، ما ترتيب النجمة؟',
+  '<div class="pattern" style="font-size:36px">'+arr.map(x=>'<span>'+x+'</span>').join('')+'</div>',
+  ordinal,1,5,seed,'ترتيب النجمة '+arabic(ordinal)+' من جهة '+(right?'اليمين':'اليسار')+'.');
+}
+function pickQuestion(skill,type,seed){
+ if(rangeOf(skill))return numberTask(skill,type,seed);
+ if(skill==='compare10'||skill==='compare20')return comparisonTask(skill,type,seed);
+ if(skill==='order10'||skill==='order20')return orderingTask(skill,type,seed);
+ if(['patternFind','patternBuild','patternSolve'].includes(skill))return patternTask(skill,type,seed);
+ if(['addStory','addModel','addSentence','addSolve','addZero','verticalAdd'].includes(skill))return additionTask(skill,type,seed);
+ if(['compose456','compose789','compose101112'].includes(skill))return composingTask(skill,type,seed);
+ if(skill==='ordinal')return ordinalTask(type,seed);
+ return generate(skill,seed);
+}
+questionsFor=function(lesson,requested){
+ const test=!!lesson.testType,cap=test?6:4;
+ const count=Math.min(cap,requested||cap),attempts=progress[lesson.code]?.attempts||0;
+ const mode=test?'tests':pageMode;
+ const shift=mode==='games'?3:mode==='tests'?7:0;
+ const rows=test?(()=>{const c=lesson.chapter,p=lesson.testType;
+  const chapters=p==='cumulative'?CHAPTERS.filter(x=>x.id<=c.id):[c];
+  const all=chapters.flatMap(x=>x.lessons);
+  return p==='prep'?all.slice(0,3):p==='mid'||p==='reviewMid'?all.slice(0,Math.ceil(all.length/2)):all;})():null;
+ const seen=new Set(),out=[];
+ for(let i=0;i<count;i++){
+  const row=test?rows[pos(i*3,rows.length)]:null;
+  const skill=row?row[2]:lesson.skill;
+  const modeType=pos(i+(test?shift:0),5);
+  let q=null;
+  for(let retry=0;retry<55;retry++){
+   const seed=attempts*17+shift*23+i*7+retry*11;
+   const next=pickQuestion(skill,modeType,seed);
+   if(!next||!next.choices?.length||next.choices.filter(x=>x.correct).length!==1)continue;
+   const key=tag(next);
+   if(!seen.has(key)){q=next;seen.add(key);break;}
+  }
+  if(q)out.push(q); // Less content is better than showing the same task twice.
+ }
+ return out.length?out:previous(lesson,requested);
+};
+})();
