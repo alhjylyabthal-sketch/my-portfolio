@@ -99,3 +99,22 @@ body .academy-notice-primary{background:#ffb451!important;color:#4b351e!importan
 }
 @media(max-width:375px){.playhero{grid-template-columns:1fr 34%}.playhero-figures .buddy-svg{width:62%}.play-chapter .world-name{font-size:14px}.play-mininav button{font-size:11px}}
 @media(prefers-reduced-motion:reduce){.buddy-svg,.buddy-svg .blink,.play-result .award-stars{animation:none!important}}
+
+
+/* لوحة اليوم: النشاط أمام الطفل، والتكليف في جزء قابل للفتح */
+body .academy-notice-adventure{display:flex;align-items:center;gap:13px;padding:13px 17px;margin:12px 0;background:linear-gradient(112deg,#e4f9ff,#fff2d4);border:3px solid #fff;border-radius:24px;box-shadow:0 5px 0 #e0e8ed}
+body .academy-adventure-symbol{display:grid;place-items:center;flex:none;width:64px;height:64px;background:#fff9e4;border:3px solid #fff;border-radius:20px;font-size:39px;transform:rotate(-5deg)}
+body .academy-adventure-copy{flex:1;min-width:0;display:grid;gap:3px}
+body .academy-adventure-copy strong{font-size:20px;line-height:1.4;color:#244d69;font-weight:1000}
+body .academy-adventure-copy span{font-size:13px;font-weight:800;color:#55758d}
+body .academy-adventure-play{font:inherit;flex:none;border:0!important;background:#ffb45e!important;color:#543216!important;box-shadow:0 5px 0 #e1943a;border-radius:18px!important;padding:11px 16px!important;font-weight:1000;cursor:pointer}
+body .academy-notice-task{background:#fffbf2!important;border-radius:18px!important;padding:10px 14px!important;margin:10px 0!important}
+body .academy-notice-task summary{font-size:15px;color:#31566e;font-weight:950;cursor:pointer;padding:3px 0}
+body .academy-notice-task p{margin:8px 0 5px;line-height:1.8}
+@media(max-width:620px){
+body .academy-notice-adventure{padding:10px;gap:8px;flex-wrap:wrap;border-radius:19px}
+body .academy-adventure-symbol{height:51px;width:51px;font-size:31px;border-radius:17px}
+body .academy-adventure-copy strong{font-size:17px}
+body .academy-adventure-copy span{font-size:11px}
+body .academy-adventure-play{width:100%;padding:10px!important;font-size:15px}
+}
