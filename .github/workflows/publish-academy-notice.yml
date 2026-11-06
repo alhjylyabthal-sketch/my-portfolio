@@ -50,7 +50,7 @@ jobs:
           if not isinstance(url, str) or len(url) > 500 or (url and not re.fullmatch(r'https://[^\s<>"\']+', url)):
               raise ValueError('Invalid URL')
           clean = {k: str(notice[k]).strip() for k in ('title','task','id','date','url')}
-          pathlib.Path('academy/live-notice.json').write_text(
+          pathlib.Path('live-notice.json').write_text(
               json.dumps(clean, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
           PY
 
@@ -58,7 +58,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add academy/live-notice.json
+          git add live-notice.json
           if ! git diff --cached --quiet; then
             git commit -m "Publish Academy adventure from teacher dashboard"
             git push
@@ -69,5 +69,5 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           GH_REPO: ${{ github.repository }}
         run: |
-          gh issue comment "${{ github.event.issue.number }}" --body "✅ نُشرت المهمة في الأكاديمية. [افتحي الرابط الدائم](https://alhjylyabthal-sketch.github.io/my-portfolio/academy/)"
+          gh issue comment "${{ github.event.issue.number }}" --body "✅ نُشرت المهمة في الأكاديمية. [افتحي الرابط الدائم](https://alhjylyabthal-sketch.github.io/little-math-academy/)"
           gh issue close "${{ github.event.issue.number }}"
