@@ -18,12 +18,13 @@
       if(changed){
         const card=document.querySelector('.academy-notice-board:not(.academy-notice-shared)');
         if(card)card.outerHTML=renderHomeNotice();
+        syncEditorFromPublicNotice(current);
       }
     }catch(err){
       if(!liveNotice)liveNotice=cachedLiveNotice();
     }finally{liveLoading=false}
   }
-  const TODAY_NOTICE={"title":"مقارنة الأعداد حتى ١٠","task":"١. افتحوا تدريب «مقارنة الأعداد حتى ١٠» في الأكاديمية وحلّوا أسئلته.\n٢. في دفتر الرياضيات: اكتبوا العدد الأكبر من كل زوج: (٧، ٤) و(٥، ٩).\n٣. اكتبوا العدد الأصغر من كل زوج: (٨، ٦) و(٢، ١٠).\n٤. ضعوا الرمز المناسب (أكبر من، أصغر من، يساوي): ٦ ◯ ٣ ، ٤ ◯ ٤.","id":"4-6","date":"2026-11-04","url":""};
+  const TODAY_NOTICE={"title":"العدد الترتيبي","task":"🌟 تعلّمنا اليوم تحديد ترتيب الأشياء حتى العاشر، مع الانتباه إلى جهة بدء العد.\n📝 مهمة بطلات الرياضيات:\n١. افتحي تدريب «العدد الترتيبي» في الأكاديمية وأكملي الأسئلة.\n٢. رتّبي خمس ألعاب أو أدوات أمامك في صف واحد.\n٣. ابدئي من اليمين، ثم أشيري إلى الأولى والثالثة والخامسة واذكري ترتيبها.\n💡 تحدّي المفكرات: إذا بدأنا العد من الجهة الأخرى، فهل يتغيّر ترتيب الألعاب؟ اكتشفي ذلك بنفسك!\n🎯 هدفنا تحديد ترتيب الأشياء بدقة وثقة.\n🌷 تعلّمي، اكتشفي، وأبدعي يا صغيرتي!\nإعداد وتنفيذ: أ. ابتهال الحجيلي","id":"4-8","date":"2026-11-08","url":""};
   const acEscape=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const today=()=>{const d=new Date();return new Date(d.getTime()-d.getTimezoneOffset()*60000).toISOString().slice(0,10)};
   const acRoot=()=>location.href.split('#')[0].split('?')[0];
@@ -80,8 +81,24 @@
   function lessonOptions(){return `<option value="">بدون ربط بدرس من الأكاديمية</option>`+
     CHAPTERS.map(ch=>`<optgroup label="الفصل ${arabic(ch.id)}: ${acEscape(ch.title)}">${ch.lessons.map(l=>`<option value="${acEscape(l[0])}">${acEscape(l[1])} (ص ${arabic(l[4])})</option>`).join('')}</optgroup>`).join('');
   }
+  function syncEditorFromPublicNotice(a){
+    const form=document.getElementById('academyNoticeForm');
+    if(!form||form.dataset.userEdited==='1')return;
+    for(const name of ['date','id','title','task','url']){
+      const field=form.elements.namedItem(name);
+      if(field)field.value=a[name]||'';
+    }
+  }
+  document.addEventListener('input',e=>{
+    const form=e.target.closest?.('#academyNoticeForm');
+    if(form)form.dataset.userEdited='1';
+  });
+  document.addEventListener('change',e=>{
+    const form=e.target.closest?.('#academyNoticeForm');
+    if(form)form.dataset.userEdited='1';
+  });
   function renderNoticeEditor(){
-    const a=savedNotice(KEY)||liveNotice||cachedLiveNotice()||TODAY_NOTICE;
+    const a=liveNotice||cachedLiveNotice()||TODAY_NOTICE;
     return `<div class="academy-notice-page">
       <div class="academy-notice-top"><button class="academy-notice-back" data-nav="home">← العودة إلى الأكاديمية</button>
         <span class="academy-notice-pill">للمعلمة</span></div>
@@ -132,7 +149,7 @@
     const raw=location.hash.replace(/^#\/?/,'');const parts=raw.split('/');const route=parts[0];
     if(route==='announce-edit'||route==='notice'){
       document.getElementById('app').innerHTML=route==='announce-edit'?renderNoticeEditor():renderSharedNotice(parts[1]||'');
-      if(route==='announce-edit'){const sel=document.getElementById('academyNoticeLesson');if(sel)sel.value=(savedNotice(KEY)||liveNotice||cachedLiveNotice()||TODAY_NOTICE)?.id||'';}
+      if(route==='announce-edit'){const sel=document.getElementById('academyNoticeLesson');if(sel)sel.value=(liveNotice||cachedLiveNotice()||TODAY_NOTICE)?.id||'';}
       const nav=document.getElementById('mainNav');if(nav)nav.hidden=true;
       document.getElementById('menuBtn')?.setAttribute('aria-expanded','false');
       document.title=(route==='announce-edit'?'إعداد الإعلان':'إعلان الحصة')+' | أكاديمية الرياضيات الصغيرة';
