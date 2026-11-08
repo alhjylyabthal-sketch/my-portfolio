@@ -49,7 +49,7 @@ renderHome=function(){
 var total=CHAPTERS.reduce(function(n,c){return n+c.lessons.length},0),done=completedCount(),pct=Math.round(done/total*100);
 return '<section class="playhome"><section class="playhero"><div class="playhero-copy">'
 +'<span class="hey">✨ أهلاً بك في عالم الرياضيات!</span><h1>أكاديمية <span>الرياضيات</span> <em>الصغيرة</em></h1>'
-+'<p>عالم من الألعاب والنجوم والمغامرات الممتعة</p><button class="playbigbutton" data-lesson="4-6">🎮 ابدأ تحدي المقارنة</button></div>'
++'<p>عالم من الألعاب والنجوم والمغامرات الممتعة</p><button class="playbigbutton" type="button" data-ac-open-current="1">🎮 ابدأ مغامرة اليوم</button></div>'
 +'<div class="playhero-figures"><img class="academy-hero-art" src="./academy-hero-art.webp" alt="بدر ولولو يرحبان بك في أكاديمية الرياضيات الصغيرة" loading="eager"></div></section>'
  +buddyPicker()+miniNav()+'<div class="quick-links" hidden aria-hidden="true" style="display:none!important"></div>'
 +'<h2 class="play-section-head">🎮 اختر مغامرتك</h2>'+worlds('games',true)
