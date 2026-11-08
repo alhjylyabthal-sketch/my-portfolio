@@ -176,6 +176,14 @@
   });
   document.addEventListener('click',async e=>{
     const b=e.target.closest('button');if(!b)return;
+    if(b.dataset.acOpenCurrent){
+      const published=liveNotice||cachedLiveNotice()||TODAY_NOTICE;
+      const id=published.id,lesson=id&&lessonById(id);
+      if(!lesson){showToast('مغامرة اليوم غير متاحة الآن');return;}
+      pageMode='games';
+      beginLesson(id);
+      return;
+    }
     if(b.dataset.acOpenLesson){navigate('practice/'+b.dataset.acOpenLesson);return;}
     if(b.dataset.acShareCurrent){const l=lessonById(b.dataset.acShareCurrent);if(l)await shareUrl(acLessonLink(l.code),l.title,'تدريب درس '+l.title);return;}
     if(b.dataset.acShareLesson){const a=formData(),id=a?.id||document.getElementById('academyNoticeLesson')?.value;
