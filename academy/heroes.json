@@ -229,6 +229,113 @@
           "approved": true
         }
       ]
+    },
+    {
+      "id": "ahmed-tareq-1-3",
+      "name": "أحمد طارق",
+      "grade": "الصف الأول الابتدائي",
+      "section": "١/٣",
+      "approved": true,
+      "guardianConsent": true,
+      "fullNameConsent": true,
+      "achievements": [
+        {
+          "skill": "العددان ١١ و١٢",
+          "badge": "وسام الإتقان الذهبي",
+          "category": "إتقان",
+          "date": "",
+          "approved": true
+        }
+      ]
+    },
+    {
+      "id": "sama-1-1",
+      "name": "سما",
+      "grade": "الصف الأول الابتدائي",
+      "section": "١/١",
+      "approved": true,
+      "guardianConsent": true,
+      "achievements": [
+        {
+          "skill": "الاختبار التراكمي",
+          "badge": "وسام الإتقان الذهبي",
+          "category": "إتقان",
+          "date": "",
+          "approved": true
+        },
+        {
+          "skill": "الاستمرار في تدريبات الرياضيات وإكمال محاولات متعددة",
+          "badge": "وسام المثابرة",
+          "category": "مثابرة",
+          "date": "",
+          "approved": true
+        }
+      ]
+    },
+    {
+      "id": "jouri-1-2",
+      "name": "جوري",
+      "grade": "الصف الأول الابتدائي",
+      "section": "١/٢",
+      "approved": true,
+      "guardianConsent": true,
+      "achievements": [
+        {
+          "skill": "العددان ١١ و١٢",
+          "badge": "وسام الإتقان الذهبي",
+          "category": "إتقان",
+          "date": "",
+          "approved": true
+        },
+        {
+          "skill": "مقارنة الأعداد حتى ١٠",
+          "badge": "وسام الإتقان الذهبي",
+          "category": "إتقان",
+          "date": "",
+          "approved": true
+        }
+      ]
+    },
+    {
+      "id": "milaf-1-1",
+      "name": "ميلاف",
+      "grade": "الصف الأول الابتدائي",
+      "section": "١/١",
+      "approved": true,
+      "guardianConsent": true,
+      "achievements": [
+        {
+          "skill": "إتمام تدريب في أكاديمية الرياضيات الصغيرة بدرجة كاملة",
+          "badge": "وسام الإتقان الذهبي",
+          "category": "إتقان",
+          "date": "",
+          "approved": true
+        }
+      ]
+    },
+    {
+      "id": "aseel-1-4",
+      "name": "أصيل",
+      "grade": "الصف الأول الابتدائي",
+      "section": "١/٤",
+      "approved": true,
+      "guardianConsent": true,
+      "achievements": [
+        {
+          "skill": "مقارنة الأعداد",
+          "badge": "وسام الإتقان الذهبي",
+          "category": "إتقان",
+          "date": "",
+          "approved": true
+        },
+        {
+          "skill": "العددان ١١ و١٢",
+          "badge": "وسام الإتقان الذهبي",
+          "category": "إتقان",
+          "date": "",
+          "approved": true
+        }
+      ]
     }
   ]
 }
