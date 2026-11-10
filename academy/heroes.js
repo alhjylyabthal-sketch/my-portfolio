@@ -3,7 +3,7 @@
 'use strict';
 if(window.__academyHeroesV1)return;
 window.__academyHeroesV1=true;
-var achievements=[],failed=false,visibleCount=8;
+var achievements=[],failed=false,visibleCount=12;
 var heroFilters={search:'',badge:'all',grade:'all',section:'all'};
 var e=x=>String(x==null?'':x).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]});
 
@@ -135,8 +135,9 @@ function filtersView(){
 }
 function studentCard(student){
   var main=student.achievements[0],count=student.achievements.length;
+  var shortBadge=/إتقان|ذهبي/.test(main.badge)?'إتقان':/مثابرة/.test(main.badge)?'مثابرة':/تميز/.test(main.badge)?'تميّز':'إنجاز';
   return '<article class="heroes-student"><button type="button" class="heroes-student-open" data-ac-profile="'+e(student.id)+'" aria-label="عرض إنجازات '+e(student.name)+'">'
-    +'<span class="heroes-medal" aria-hidden="true">🏅</span><span class="heroes-badge">'+e(main.badge)+'</span>'
+    +'<span class="heroes-medal" aria-hidden="true">🏅</span><span class="heroes-badge">'+e(main.badge)+'</span><span class="heroes-badge heroes-badge-short" aria-hidden="true">'+e(shortBadge)+'</span>'
     +'<h2>'+e(student.name)+'</h2><p>'+e(main.skill)+'</p>'
     +'<small>📋 إنجازات موثقة: '+arabic(count)+'</small>'
     +'<span class="heroes-student-more"><span class="heroes-action-icon" aria-hidden="true">🏅</span> عرض الأوسمة</span></button></article>';
@@ -255,7 +256,7 @@ function installStyles(){
   document.head.appendChild(style);
   var design=document.createElement('link');
   design.rel='stylesheet';
-  design.href='./heroes-premium.css?v=1';
+  design.href='./heroes-premium.css?v=2';
   document.head.appendChild(design);
 }
 function mount(){
@@ -281,10 +282,10 @@ function mount(){
     var b=event.target.closest('button');if(!b)return;
     if(b.dataset.acHeroes){navigate('heroes');return}
     if(b.dataset.acRefreshHeroes){fetchWall();return}
-    if(b.hasAttribute('data-ac-class')){heroFilters.section=b.dataset.acClass;visibleCount=8;refreshWall();return}
-    if(b.dataset.acBadge){heroFilters.badge=b.dataset.acBadge;visibleCount=8;refreshGridOnly();return}
-    if(b.dataset.acMore){visibleCount+=8;refreshGridOnly();return}
-    if(b.dataset.acResetFilters){heroFilters={search:'',badge:'all',grade:'all',section:'all'};visibleCount=8;refreshWall();return}
+    if(b.hasAttribute('data-ac-class')){heroFilters.section=b.dataset.acClass;visibleCount=12;refreshWall();return}
+    if(b.dataset.acBadge){heroFilters.badge=b.dataset.acBadge;visibleCount=12;refreshGridOnly();return}
+    if(b.dataset.acMore){visibleCount+=12;refreshGridOnly();return}
+    if(b.dataset.acResetFilters){heroFilters={search:'',badge:'all',grade:'all',section:'all'};visibleCount=12;refreshWall();return}
     if(b.dataset.acProfile){navigate('heroes/student/'+b.dataset.acProfile);return}
     if(b.dataset.acBackHeroes){navigate('heroes');return}
     if(b.dataset.acAwardSave){exportAward(false);return}
@@ -292,12 +293,12 @@ function mount(){
   });
   document.addEventListener('input',function(event){
     if(!event.target.matches('[data-ac-search]'))return;
-    heroFilters.search=event.target.value;visibleCount=8;refreshGridOnly();
+    heroFilters.search=event.target.value;visibleCount=12;refreshGridOnly();
   });
   document.addEventListener('change',function(event){
     var field=event.target.dataset.acFilter;
     if(!['grade','section'].includes(field))return;
-    heroFilters[field]=event.target.value;if(field==='grade')heroFilters.section='all';visibleCount=8;refreshWall();
+    heroFilters[field]=event.target.value;if(field==='grade')heroFilters.section='all';visibleCount=12;refreshWall();
   });
   var home=document.querySelector('#app .quick-links');
   if(home&&!document.querySelector('.heroes-home'))home.insertAdjacentHTML('beforebegin',cta());
