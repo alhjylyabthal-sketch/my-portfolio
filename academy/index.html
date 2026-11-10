@@ -590,7 +590,7 @@ function renderEvidence(){const history=Array.isArray(progress.history)?progress
 const average=best.length?Math.round(best.reduce((a,b)=>a+b,0)/best.length):0;
 return `${pageHeader('🏅 الشواهد والإنجازات','شاهد نجومك ونتائجك بعد كل لعبة أو تدريب!','الشواهد')}
  <div class="evidence-summary"><div class="stat"><strong>${arabic(completedCount())}</strong><span>دروس أُتقنت (٧٥٪ فأكثر)</span></div><div class="stat"><strong>${arabic(history.length)}</strong><span>محاولات</span></div><div class="stat"><strong>${arabic(average)}٪</strong><span>متوسط أفضل النتائج</span></div></div>
- <details class="teacher-tools"><summary>للمعلمة</summary><p>النتائج محفوظة على هذا الجهاز فقط، ولا تُرسل إلى المعلمة تلقائيًا.</p>
+ <details class="teacher-tools"><summary>🏅 حفظ إنجازات طفلي وإرسالها للمعلمة</summary><p>تظهر نتائج الطفل في قسم «آخر التدريبات» أسفل هذه البطاقة. صوّري الشاشة وأرسليها للمعلمة مع اسم الطفل وفصله، أو اختاري «حفظ سجل النتائج» لتحميل السجل.</p><p>النتائج محفوظة على هذا الجهاز فقط ولا تُرسل تلقائيًا.</p>
  <div class="btnrow"><button class="primary" data-export="csv">حفظ سجل النتائج</button><button class="secondary" data-export="json">حفظ نسخة احتياطية</button></div></details>
  <h2 class="list-heading">آخر التدريبات</h2><section class="evidence-history">${history.length?history.slice().reverse().slice(0,20).map(r=>`<article><span><strong>${r.title}</strong><br><small>الفصل ${arabic(r.chapter)} • ${new Date(r.date).toLocaleDateString('ar-SA')}</small></span><strong>${arabic(r.score)}٪</strong></article>`).join(''):'<div class="notice">لم تُسجّل تدريبات على هذا الجهاز بعد. ابدأ من الدروس، وبعد الإجابة ستظهر النتائج هنا.</div>'}</section>`;
 }
