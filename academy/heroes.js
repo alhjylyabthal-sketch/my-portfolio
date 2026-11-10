@@ -32,7 +32,7 @@ function validItems(data){
   var ids=new Set();
   return source.filter(function(x){return x&&x.approved===true&&x.guardianConsent===true&&simpleFirstName(x.name);}).slice(0,2000)
     .map(function(x,i){
-      var name=simpleFirstName(x.name);
+      var name=x.fullNameConsent===true?String(x.name||'').trim().replace(/\s+/g,' ').slice(0,60):simpleFirstName(x.name);
       var fallback='hero-'+Array.from(name).map(function(c){return c.codePointAt(0).toString(36)}).join('-')+'-'+i;
       var id=/^[a-z0-9_-]{1,50}$/i.test(String(x.id||''))?String(x.id):fallback;
       if(ids.has(id))id=fallback;
@@ -177,7 +177,7 @@ function heroPage(){
     +'<div class="heroes-brand"><span class="heroes-brand-icon" aria-hidden="true">📖</span><strong>أكاديمية الرياضيات الصغيرة</strong></div>'
     +'<header class="heroes-title"><span class="heroes-title-laurel right" aria-hidden="true">❧</span><div class="heroes-title-inner"><span class="heroes-title-kicker" aria-hidden="true">🏆</span><h1>إنجازات أبطالنا</h1><p>كل إنجاز صغير بداية لنجاح كبير</p></div><span class="heroes-title-laurel left" aria-hidden="true">❧</span></header>'
     +'<div id="heroesPublicList">'+heroCards()+'</div>'
-    +'<div class="heroes-privacy"><span class="heroes-privacy-icon" aria-hidden="true">🔒</span><span>تُعرض الأسماء الأولى بعد مراجعة المعلمة وموافقة ولي الأمر فقط، دون صور أو درجات.</span></div>'
+    +'<div class="heroes-privacy"><span class="heroes-privacy-icon" aria-hidden="true">🔒</span><span>تُعرض الأسماء وفق موافقة ولي الأمر ومراجعة المعلمة فقط، دون صور أو درجات.</span></div>'
     +'<p class="heroes-teacher">إعداد وتنفيذ: أ. ابتهال الحجيلي</p></section>';
 }
 function refreshWall(){
