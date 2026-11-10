@@ -336,6 +336,65 @@
           "approved": true
         }
       ]
+    },
+    {
+      "id": "hashim-1-4",
+      "name": "هاشم",
+      "grade": "الصف الأول الابتدائي",
+      "section": "١/٤",
+      "approved": true,
+      "guardianConsent": true,
+      "achievements": [
+        {
+          "skill": "مقارنة الأعداد",
+          "badge": "وسام الإتقان الذهبي",
+          "category": "إتقان",
+          "date": "",
+          "approved": true
+        },
+        {
+          "skill": "العدد الترتيبي",
+          "badge": "وسام الإتقان الذهبي",
+          "category": "إتقان",
+          "date": "",
+          "approved": true
+        },
+        {
+          "skill": "التصنيف وفق خاصية واحدة",
+          "badge": "وسام الإتقان الذهبي",
+          "category": "إتقان",
+          "date": "",
+          "approved": true
+        },
+        {
+          "skill": "قراءة الأعداد وتكوينها",
+          "badge": "وسام الإتقان الذهبي",
+          "category": "إتقان",
+          "date": "",
+          "approved": true
+        },
+        {
+          "skill": "العددان ١١ و١٢",
+          "badge": "وسام الإتقان الذهبي",
+          "category": "إتقان",
+          "date": "",
+          "approved": true
+        },
+        {
+          "skill": "حل المسألة واختبارات الرياضيات",
+          "badge": "وسام الإتقان الذهبي",
+          "category": "إتقان",
+          "date": "",
+          "approved": true
+        },
+        {
+          "skill": "المثابرة وتحسين نتائج التدريبات",
+          "badge": "وسام المثابرة",
+          "category": "مثابرة",
+          "date": "",
+          "approved": true
+        }
+      ]
     }
   ]
 }
