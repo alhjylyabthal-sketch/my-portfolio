@@ -93,16 +93,16 @@
 .heroes-page .heroes-controls .heroes-select-wrap{display:block;position:relative}
 .heroes-page .heroes-controls select{
   appearance:none;-webkit-appearance:none;
-  padding-inline-start:33px;padding-inline-end:41px;
+  padding-inline-start:41px;padding-inline-end:33px;
   cursor:pointer;
 }
 .heroes-page .heroes-controls select:disabled{cursor:default;opacity:.68;background:#f8f9f8}
 .heroes-page .heroes-select-wrap:before{
-  content:"⌄";position:absolute;inset-inline-start:12px;top:9px;font-size:24px;
+  content:"⌄";position:absolute;inset-inline-end:12px;top:9px;font-size:24px;
   color:#124b60;z-index:1;pointer-events:none;
 }
 .heroes-page .heroes-select-wrap:after{
-  content:"▤";position:absolute;inset-inline-end:12px;top:15px;
+  content:"▤";position:absolute;inset-inline-start:12px;top:15px;
   color:#087f7b;font-size:22px;line-height:1;pointer-events:none;
 }
 .heroes-page .heroes-section .heroes-select-wrap:after{content:"♟";font-size:21px}
