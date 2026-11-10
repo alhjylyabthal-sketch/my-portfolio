@@ -108,7 +108,7 @@ function studentCard(student){
 function gridBody(){
   var results=filteredStudents(),shown=results.slice(0,visibleCount);
   if(!results.length)return '<div class="heroes-empty"><div aria-hidden="true">🔎</div><strong>لا توجد نتائج مطابقة</strong><p>جرّب اسمًا أو مهارة أخرى، أو اختر جميع الأبطال.</p><button type="button" data-ac-reset-filters="1">إظهار الجميع</button></div>';
-  return '<p class="heroes-count">عدد الأبطال المعروضين: '+arabic(shown.length)+' من '+arabic(results.length)+'</p>'
+  return '<p class="heroes-count">عدد الأبطال: '+arabic(shown.length)+' من '+arabic(results.length)+'</p>'
     +'<div class="heroes-gallery">'+shown.map(studentCard).join('')+'</div>'
     +(shown.length<results.length?'<button type="button" class="heroes-more" data-ac-more="1">عرض المزيد من الأبطال</button>':'');
 }
