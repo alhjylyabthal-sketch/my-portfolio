@@ -286,3 +286,47 @@
 @media(prefers-reduced-motion:reduce){
   .heroes-page .heroes-student{transition:none}
 }
+
+
+/* مُحدِّد الفصول الدراسية: أربع بطاقات واضحة من دون رموز مضللة أو قوائم معطلة */
+.heroes-page .heroes-controls{grid-template-columns:minmax(140px,1fr) minmax(220px,2fr)!important;align-items:end}
+.heroes-page .heroes-controls .heroes-grade{grid-column:1;grid-row:1}
+.heroes-page .heroes-controls .heroes-search{grid-column:2;grid-row:1}
+.heroes-page .heroes-select-wrap:after{content:""!important;display:none}
+.heroes-page .heroes-controls select{padding-inline-start:13px;padding-inline-end:34px}
+.heroes-page .heroes-class-group{
+  margin:15px 0 19px;padding:15px 13px 14px;
+  border:1px solid #d5e9e4;border-radius:20px;
+  background:linear-gradient(125deg,#f2fbf8,#fffdf7);
+}
+.heroes-page .heroes-class-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px}
+.heroes-page .heroes-class-head h2{
+  font-size:17px!important;font-weight:900;color:#155165;
+  padding:0;margin:0;line-height:1.4;
+}
+.heroes-page .heroes-class-head .heroes-all-class{
+  min-height:36px;padding:6px 16px;border:1px solid #c9ddd9;
+  border-radius:20px;background:#fff;color:#246065;
+  font-family:inherit;font-weight:800;font-size:13px;cursor:pointer;
+}
+.heroes-page .heroes-class-tabs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px}
+.heroes-page .heroes-class-tabs button{
+  min-width:0;min-height:52px;padding:9px 5px;
+  font-family:inherit;font-size:clamp(12px,2.4vw,16px);font-weight:900;
+  border-radius:14px;border:1px solid #cbdcd8;background:#fff;
+  color:#20596b;cursor:pointer;
+  box-shadow:0 3px 9px #1238530d;
+}
+.heroes-page .heroes-class-tabs button.is-active,
+.heroes-page .heroes-all-class.is-active{
+  background:linear-gradient(120deg,#086f76,#075663);color:#fff;border-color:#076870;
+  box-shadow:0 5px 12px #07676e2b;
+}
+@media(max-width:620px){
+  .heroes-page .heroes-controls{grid-template-columns:1fr!important}
+  .heroes-page .heroes-controls .heroes-grade{grid-column:1;grid-row:1}
+  .heroes-page .heroes-controls .heroes-search{grid-column:1;grid-row:2}
+  .heroes-page .heroes-class-group{padding:12px 10px;margin:11px 0 15px}
+  .heroes-page .heroes-class-tabs{gap:6px}
+  .heroes-page .heroes-class-tabs button{font-size:12px;min-height:48px;padding:8px 3px}
+}
