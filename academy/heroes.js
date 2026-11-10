@@ -32,7 +32,7 @@ function validItems(data){
   var ids=new Set();
   return source.filter(function(x){return x&&x.approved===true&&x.guardianConsent===true&&simpleFirstName(x.name);}).slice(0,2000)
     .map(function(x,i){
-      var name=x.fullNameConsent===true?String(x.name||'').trim().replace(/\s+/g,' ').slice(0,60):simpleFirstName(x.name);
+      var name=(x.fullNameConsent===true||x.compoundFirstName===true)?String(x.name||'').trim().replace(/\s+/g,' ').slice(0,60):simpleFirstName(x.name);
       var fallback='hero-'+Array.from(name).map(function(c){return c.codePointAt(0).toString(36)}).join('-')+'-'+i;
       var id=/^[a-z0-9_-]{1,50}$/i.test(String(x.id||''))?String(x.id):fallback;
       if(ids.has(id))id=fallback;
