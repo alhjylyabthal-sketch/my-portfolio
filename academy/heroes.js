@@ -70,11 +70,41 @@ function heroRoute(){
 function normalizedSearch(value){
   return String(value||'').toLocaleLowerCase('ar').replace(/[\u064b-\u065f\u0670]/g,'').replace(/[إأآ]/g,'ا').replace(/ى/g,'ي').trim();
 }
+function arabicDigits(value){
+  return String(value).replace(/[0-9]/g,function(c){return '٠١٢٣٤٥٦٧٨٩'[Number(c)]});
+}
+function numericDigits(value){
+  return String(value||'').replace(/[٠-٩]/g,function(c){return String('٠١٢٣٤٥٦٧٨٩'.indexOf(c))});
+}
+function activeGradeNumber(){
+  var grade=heroFilters.grade;
+  if(grade==='all'){
+    var observed=[...new Set(achievements.map(function(x){return x.grade}).filter(Boolean))];
+    grade=observed.length===1?observed[0]:'الصف الأول الابتدائي';
+  }
+  if(/السادس/.test(grade))return 6;
+  if(/الخامس/.test(grade))return 5;
+  if(/الرابع/.test(grade))return 4;
+  if(/الثالث/.test(grade))return 3;
+  if(/الثاني/.test(grade))return 2;
+  return 1;
+}
+function classLabel(grade,number){
+  var names=['','الأولى','الثانية','الثالثة','الرابعة','الخامسة','السادسة'];
+  return (names[grade]||'الفصل')+' '+arabicDigits(number);
+}
+function classCodeFor(student){
+  var raw=numericDigits(student.section).trim();
+  if(/^[1-6]\/[1-4]$/.test(raw))return arabicDigits(raw);
+  var match=raw.match(/([1-4])\s*$/);
+  if(match)return arabicDigits(activeGradeNumber()+'/'+match[1]);
+  return raw;
+}
 function filteredStudents(){
   var search=normalizedSearch(heroFilters.search);
   return achievements.filter(function(student){
     if(heroFilters.grade!=='all'&&student.grade!==heroFilters.grade)return false;
-    if(heroFilters.section!=='all'&&student.section!==heroFilters.section)return false;
+    if(heroFilters.section!=='all'&&classCodeFor(student)!==heroFilters.section)return false;
     if(heroFilters.badge!=='all'&&!student.achievements.some(function(a){return a.category===heroFilters.badge}))return false;
     if(search&&!normalizedSearch(student.name+' '+student.achievements.map(function(a){return a.skill+' '+a.badge}).join(' ')).includes(search))return false;
     return true;
@@ -87,12 +117,18 @@ function optionsForFilter(items,selected){
 }
 function filtersView(){
   var grades=[...new Set(achievements.map(function(x){return x.grade}).filter(Boolean))].sort(function(a,b){return a.localeCompare(b,'ar')});
-  var sections=[...new Set(achievements.filter(function(x){return heroFilters.grade==='all'||x.grade===heroFilters.grade}).map(function(x){return x.section}).filter(Boolean))].sort(function(a,b){return a.localeCompare(b,'ar')});
+  var grade=activeGradeNumber();
   return '<div class="heroes-controls">'
     +'<label class="heroes-grade">الصف<span class="heroes-select-wrap"><select data-ac-filter="grade" aria-label="اختر الصف"><option value="all">كل الصفوف</option>'+optionsForFilter(grades,heroFilters.grade)+'</select></span></label>'
-    +'<label class="heroes-section">الشعبة<span class="heroes-select-wrap"><select data-ac-filter="section" aria-label="اختر الشعبة"'+(sections.length?'':' disabled')+'><option value="all">كل الشعب</option>'+optionsForFilter(sections,heroFilters.section)+'</select></span></label>'
     +'<label class="heroes-search"><span>البحث عن بطل أو مهارة</span><input type="search" data-ac-search="1" aria-label="البحث عن بطل أو مهارة" placeholder="ابحث عن بطل أو مهارة" autocomplete="off" value="'+e(heroFilters.search)+'"></label>'
-    +'</div><div class="heroes-filter-tabs" role="group" aria-label="تصفية الأوسمة">'
+    +'</div><section class="heroes-class-group" aria-label="الفصول الدراسية"><div class="heroes-class-head"><h2>الفصول الدراسية</h2>'
+    +'<button type="button" data-ac-class="all" class="heroes-all-class'+(heroFilters.section==='all'?' is-active':'')+'" aria-pressed="'+(heroFilters.section==='all')+'">كل الفصول</button></div>'
+    +'<div class="heroes-class-tabs">'
+    +[1,2,3,4].map(function(number){
+      var code=arabicDigits(grade+'/'+number),selected=heroFilters.section===code;
+      return '<button type="button" data-ac-class="'+e(code)+'" class="'+(selected?'is-active':'')+'" aria-pressed="'+selected+'">'+e(classLabel(grade,number))+'</button>';
+    }).join('')+'</div></section>'
+    +'<div class="heroes-filter-tabs" role="group" aria-label="تصفية الأوسمة">'
     +[['all','جميع الأبطال','👥'],['إتقان','الإتقان','🏅'],['تميز','التميز','⭐'],['مثابرة','المثابرة','🌱']].map(function(option){
       return '<button type="button" data-ac-badge="'+e(option[0])+'" class="'+(heroFilters.badge===option[0]?'is-active':'')+'" aria-pressed="'+(heroFilters.badge===option[0])+'"><span class="heroes-tab-icon" aria-hidden="true">'+option[2]+'</span>'+e(option[1])+'</button>';
     }).join('')+'</div>';
@@ -107,7 +143,7 @@ function studentCard(student){
 }
 function gridBody(){
   var results=filteredStudents(),shown=results.slice(0,visibleCount);
-  if(!results.length)return '<div class="heroes-empty"><div aria-hidden="true">🔎</div><strong>لا توجد نتائج مطابقة</strong><p>جرّب اسمًا أو مهارة أخرى، أو اختر جميع الأبطال.</p><button type="button" data-ac-reset-filters="1">إظهار الجميع</button></div>';
+  if(!results.length)return '<div class="heroes-empty"><div aria-hidden="true">🌟</div><strong>'+(heroFilters.section!=='all'?'إنجازات هذا الفصل في الطريق':'لا توجد نتائج مطابقة')+'</strong><p>'+(heroFilters.section!=='all'?'لم تُنشر إنجازات لهذا الفصل بعد، أو لا توجد نتائج مطابقة للتصفية الحالية.':'جرّب اسمًا أو مهارة أخرى، أو اختر جميع الأبطال.')+'</p><button type="button" data-ac-reset-filters="1">إظهار الجميع</button></div>';
   return '<p class="heroes-count">عدد الأبطال: '+arabic(shown.length)+' من '+arabic(results.length)+'</p>'
     +'<div class="heroes-gallery">'+shown.map(studentCard).join('')+'</div>'
     +(shown.length<results.length?'<button type="button" class="heroes-more" data-ac-more="1">عرض المزيد من الأبطال</button>':'');
@@ -121,7 +157,7 @@ function heroProfile(student){
   var badges=[...new Set(student.achievements.map(function(a){return a.badge}))];
   return '<section class="heroes-page"><button type="button" class="heroes-back" data-ac-back-heroes="1">↩ العودة لجميع الأبطال</button>'
     +'<div class="heroes-profile-head"><div class="heroes-profile-icon" aria-hidden="true">🏆</div><p>أكاديمية الرياضيات الصغيرة</p><h1>إنجازات '+e(student.name)+'</h1>'
-    +'<div class="heroes-profile-meta">'+(student.grade?'<span>'+e(student.grade)+'</span>':'')+(student.section?'<span>'+e(student.section)+'</span>':'')+'<span>'+arabic(student.achievements.length)+' إنجازات موثقة</span></div>'
+    +'<div class="heroes-profile-meta">'+(student.grade?'<span>'+e(student.grade)+'</span>':'')+(student.section?'<span>الفصل '+e(student.section)+'</span>':'')+'<span>'+arabic(student.achievements.length)+' إنجازات موثقة</span></div>'
     +'<div class="heroes-profile-badges">'+badges.map(function(b){return '<span>⭐ '+e(b)+'</span>'}).join('')+'</div></div>'
     +'<h2 class="heroes-section-heading">سجل الإنجازات</h2>'
     +'<div class="heroes-profile-records">'+student.achievements.map(function(a){
@@ -245,6 +281,7 @@ function mount(){
     var b=event.target.closest('button');if(!b)return;
     if(b.dataset.acHeroes){navigate('heroes');return}
     if(b.dataset.acRefreshHeroes){fetchWall();return}
+    if(b.hasAttribute('data-ac-class')){heroFilters.section=b.dataset.acClass;visibleCount=8;refreshWall();return}
     if(b.dataset.acBadge){heroFilters.badge=b.dataset.acBadge;visibleCount=8;refreshGridOnly();return}
     if(b.dataset.acMore){visibleCount+=8;refreshGridOnly();return}
     if(b.dataset.acResetFilters){heroFilters={search:'',badge:'all',grade:'all',section:'all'};visibleCount=8;refreshWall();return}
