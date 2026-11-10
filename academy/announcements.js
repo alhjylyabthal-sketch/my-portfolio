@@ -226,4 +226,4 @@
   document.addEventListener('visibilitychange',()=>{if(!document.hidden)refreshLiveNotice()});
 }());
 /* ركن إنجازات الأبطال مستقل عن سجل الدرجات وبيانات الطلاب */
-(function(){var s=document.createElement('script');s.src='./heroes.js?v=7';s.async=true;document.body.appendChild(s);}());
+(function(){var s=document.createElement('script');s.src='./heroes.js?v=8';s.async=true;document.body.appendChild(s);}());
