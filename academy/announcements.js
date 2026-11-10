@@ -225,3 +225,5 @@
   window.addEventListener('focus',refreshLiveNotice);
   document.addEventListener('visibilitychange',()=>{if(!document.hidden)refreshLiveNotice()});
 }());
+/* ركن إنجازات الأبطال مستقل عن سجل الدرجات وبيانات الطلاب */
+(function(){var s=document.createElement('script');s.src='./heroes.js?v=1';s.async=true;document.body.appendChild(s);}());
