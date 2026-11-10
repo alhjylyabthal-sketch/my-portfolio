@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "updated": "2026-11-10",
+  "updated": "2026-11-11",
   "items": [],
   "students": [
     {
@@ -391,6 +391,30 @@
           "skill": "المثابرة وتحسين نتائج التدريبات",
           "badge": "وسام المثابرة",
           "category": "مثابرة",
+          "date": "",
+          "approved": true
+        }
+      ]
+    },
+    {
+      "id": "hamza-1-4",
+      "name": "حمزة",
+      "grade": "الصف الأول الابتدائي",
+      "section": "١/٤",
+      "approved": true,
+      "guardianConsent": true,
+      "achievements": [
+        {
+          "skill": "العددان ١١ و١٢",
+          "badge": "وسام الإتقان الذهبي",
+          "category": "إتقان",
+          "date": "",
+          "approved": true
+        },
+        {
+          "skill": "مقارنة الأعداد حتى ١٠",
+          "badge": "وسام الإنجاز",
+          "category": "تميز",
           "date": "",
           "approved": true
         }
