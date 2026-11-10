@@ -1,5 +1,62 @@
 {
-  "version": 1,
+  "version": 2,
   "updated": "2026-11-10",
-  "items": []
+  "items": [],
+  "students": [
+    {
+      "id": "saba",
+      "name": "صبا",
+      "grade": "الصف الأول الابتدائي",
+      "section": "",
+      "approved": true,
+      "guardianConsent": true,
+      "achievements": [
+        {
+          "skill": "قراءة الأعداد وكتابتها حتى ٥",
+          "badge": "وسام الإتقان الذهبي",
+          "category": "إتقان",
+          "date": "2026-11-09",
+          "approved": true
+        },
+        {
+          "skill": "العدد الترتيبي",
+          "badge": "وسام الإتقان الذهبي",
+          "category": "إتقان",
+          "date": "2026-11-09",
+          "approved": true
+        },
+        {
+          "skill": "التصنيف",
+          "badge": "وسام الإتقان الذهبي",
+          "category": "إتقان",
+          "date": "2026-11-09",
+          "approved": true
+        },
+        {
+          "skill": "حل المسألة بالرسم",
+          "badge": "وسام الإتقان الذهبي",
+          "category": "إتقان",
+          "date": "2026-11-09",
+          "approved": true
+        }
+      ]
+    },
+    {
+      "id": "sohaib",
+      "name": "صهيب",
+      "grade": "الصف الأول الابتدائي",
+      "section": "",
+      "approved": true,
+      "guardianConsent": true,
+      "achievements": [
+        {
+          "skill": "المشاركة والمثابرة في تدريبات الرياضيات",
+          "badge": "وسام المثابرة",
+          "category": "مثابرة",
+          "date": "",
+          "approved": true
+        }
+      ]
+    }
+  ]
 }
