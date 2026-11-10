@@ -87,13 +87,14 @@ function optionsForFilter(items,selected){
 }
 function filtersView(){
   var grades=[...new Set(achievements.map(function(x){return x.grade}).filter(Boolean))].sort(function(a,b){return a.localeCompare(b,'ar')});
-  var sections=[...new Set(achievements.map(function(x){return x.section}).filter(Boolean))].sort(function(a,b){return a.localeCompare(b,'ar')});
-  return '<div class="heroes-controls"><label class="heroes-search">ابحث عن بطل أو مهارة<input type="search" data-ac-search="1" placeholder="اكتب الاسم أو المهارة" autocomplete="off" value="'+e(heroFilters.search)+'"></label>'
-    +'<label>الصف<select data-ac-filter="grade"><option value="all">كل الصفوف</option>'+optionsForFilter(grades,heroFilters.grade)+'</select></label>'
-    +'<label>الشعبة<select data-ac-filter="section"'+(sections.length?'':' disabled')+'><option value="all">كل الشعب</option>'+optionsForFilter(sections,heroFilters.section)+'</select></label>'
-    +'</div><div class="heroes-filter-tabs" role="group" aria-label="تصفية الأوسمة">'+
-    [['all','جميع الأبطال'],['إتقان','الإتقان'],['تميز','التميز'],['مثابرة','المثابرة']].map(function(option){
-      return '<button type="button" data-ac-badge="'+e(option[0])+'" class="'+(heroFilters.badge===option[0]?'is-active':'')+'" aria-pressed="'+(heroFilters.badge===option[0])+'">'+e(option[1])+'</button>';
+  var sections=[...new Set(achievements.filter(function(x){return heroFilters.grade==='all'||x.grade===heroFilters.grade}).map(function(x){return x.section}).filter(Boolean))].sort(function(a,b){return a.localeCompare(b,'ar')});
+  return '<div class="heroes-controls">'
+    +'<label class="heroes-grade">الصف<span class="heroes-select-wrap"><select data-ac-filter="grade" aria-label="اختر الصف"><option value="all">كل الصفوف</option>'+optionsForFilter(grades,heroFilters.grade)+'</select></span></label>'
+    +'<label class="heroes-section">الشعبة<span class="heroes-select-wrap"><select data-ac-filter="section" aria-label="اختر الشعبة"'+(sections.length?'':' disabled')+'><option value="all">كل الشعب</option>'+optionsForFilter(sections,heroFilters.section)+'</select></span></label>'
+    +'<label class="heroes-search"><span>البحث عن بطل أو مهارة</span><input type="search" data-ac-search="1" aria-label="البحث عن بطل أو مهارة" placeholder="ابحث عن بطل أو مهارة" autocomplete="off" value="'+e(heroFilters.search)+'"></label>'
+    +'</div><div class="heroes-filter-tabs" role="group" aria-label="تصفية الأوسمة">'
+    +[['all','جميع الأبطال','👥'],['إتقان','الإتقان','🏅'],['تميز','التميز','⭐'],['مثابرة','المثابرة','🌱']].map(function(option){
+      return '<button type="button" data-ac-badge="'+e(option[0])+'" class="'+(heroFilters.badge===option[0]?'is-active':'')+'" aria-pressed="'+(heroFilters.badge===option[0])+'"><span class="heroes-tab-icon" aria-hidden="true">'+option[2]+'</span>'+e(option[1])+'</button>';
     }).join('')+'</div>';
 }
 function studentCard(student){
@@ -101,7 +102,8 @@ function studentCard(student){
   return '<article class="heroes-student"><button type="button" class="heroes-student-open" data-ac-profile="'+e(student.id)+'" aria-label="عرض إنجازات '+e(student.name)+'">'
     +'<span class="heroes-medal" aria-hidden="true">🏅</span><span class="heroes-badge">'+e(main.badge)+'</span>'
     +'<h2>'+e(student.name)+'</h2><p>'+e(main.skill)+'</p>'
-    +'<small>إنجازات موثقة: '+arabic(count)+'</small><span class="heroes-student-more">عرض الأوسمة ←</span></button></article>';
+    +'<small>📋 إنجازات موثقة: '+arabic(count)+'</small>'
+    +'<span class="heroes-student-more"><span class="heroes-action-icon" aria-hidden="true">🏅</span> عرض الأوسمة</span></button></article>';
 }
 function gridBody(){
   var results=filteredStudents(),shown=results.slice(0,visibleCount);
@@ -136,9 +138,10 @@ function heroPage(){
       +'<div class="heroes-empty"><strong>لم يُعثر على هذا الإنجاز</strong><p>قد يكون العرض ما زال قيد التحديث.</p></div></section>';
   }
   return '<section class="heroes-page"><button type="button" class="heroes-back" data-nav="home">↩ الرجوع للرئيسية</button>'
-    +'<div class="heroes-title"><span aria-hidden="true">🏆</span><div><p>أكاديمية الرياضيات الصغيرة</p><h1>إنجازات أبطالنا</h1><p>كل إنجاز صغير بداية لنجاح كبير</p></div></div>'
+    +'<div class="heroes-brand"><span class="heroes-brand-icon" aria-hidden="true">📖</span><strong>أكاديمية الرياضيات الصغيرة</strong></div>'
+    +'<header class="heroes-title"><span class="heroes-title-laurel right" aria-hidden="true">❧</span><div class="heroes-title-inner"><span class="heroes-title-kicker" aria-hidden="true">🏆</span><h1>إنجازات أبطالنا</h1><p>كل إنجاز صغير بداية لنجاح كبير</p></div><span class="heroes-title-laurel left" aria-hidden="true">❧</span></header>'
     +'<div id="heroesPublicList">'+heroCards()+'</div>'
-    +'<div class="heroes-privacy">🔒 تُعرض الأسماء الأولى بعد مراجعة المعلمة وموافقة ولي الأمر فقط، دون صور أو درجات. لا يُربط هذا الركن بنتائج الجهاز.</div>'
+    +'<div class="heroes-privacy"><span class="heroes-privacy-icon" aria-hidden="true">🔒</span><span>تُعرض الأسماء الأولى بعد مراجعة المعلمة وموافقة ولي الأمر فقط، دون صور أو درجات.</span></div>'
     +'<p class="heroes-teacher">إعداد وتنفيذ: أ. ابتهال الحجيلي</p></section>';
 }
 function refreshWall(){
@@ -214,6 +217,10 @@ function installStyles(){
 
   style.textContent += '.heroes-page .heroes-gallery{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:17px 0}.heroes-page .heroes-student{min-width:0;padding:0;overflow:hidden;border-top-width:4px}.heroes-student-open{display:flex;align-items:center;flex-direction:column;gap:7px;width:100%;height:100%;min-height:205px;padding:18px 9px;background:transparent;border:0;font:inherit;color:inherit;text-align:center;cursor:pointer}.heroes-student-open:focus-visible{outline:3px solid #127e7c;outline-offset:-5px}.heroes-student .heroes-medal{font-size:32px}.heroes-student .heroes-badge{font-size:11px;padding:5px 9px}.heroes-student h2{font-size:21px;margin:2px 0}.heroes-student p{font-size:13px;line-height:1.6;margin:0;flex:1}.heroes-student small{font-size:11px}.heroes-student-more{font-size:12px;color:#116f74;font-weight:900}.heroes-controls{display:grid;grid-template-columns:2fr 1fr 1fr;gap:12px;margin:24px 0 14px}.heroes-controls label{display:flex;flex-direction:column;gap:7px;color:#183957;font-size:13px;font-weight:800}.heroes-controls input,.heroes-controls select{min-width:0;width:100%;padding:12px;border:1px solid #cddfdf;border-radius:12px;background:#fff;color:#183957;font:inherit;font-size:15px}.heroes-controls select:disabled{opacity:.55}.heroes-filter-tabs{display:flex;flex-wrap:wrap;gap:9px}.heroes-filter-tabs button{border:1px solid #cddfdf;border-radius:20px;background:#fff;color:#285068;padding:9px 15px;cursor:pointer;font-weight:800;font-size:14px}.heroes-filter-tabs .is-active{background:#147d79;border-color:#147d79;color:#fff}.heroes-count{text-align:right;font-size:13px;color:#536e7b;margin:16px 0 0}.heroes-more{width:100%;padding:13px;margin:6px 0 16px;border-radius:14px;border:1px solid #b8d9d6;background:#e9f7f3;color:#145b62;font-weight:900;cursor:pointer}.heroes-profile-head{text-align:center;margin:20px 0;padding:26px 15px;background:linear-gradient(125deg,#e7f8f5,#fff5db);border-radius:26px;border:1px solid #d5e5df}.heroes-profile-icon{font-size:60px}.heroes-profile-head h1{margin:7px;font-size:34px}.heroes-profile-head p{margin:4px;font-size:15px}.heroes-profile-meta,.heroes-profile-badges{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin-top:12px}.heroes-profile-meta span,.heroes-profile-badges span{padding:7px 12px;background:#fff;border:1px solid #e1e5e4;border-radius:25px;font-size:13px}.heroes-profile-badges span{background:#fff7dd;color:#7c6016}.heroes-section-heading{margin:27px 0 12px;font-size:22px}.heroes-profile-records{display:grid;gap:11px}.heroes-record{display:flex;align-items:center;gap:13px;border:1px solid #e0e8e9;border-radius:16px;padding:15px;background:#fff}.heroes-record-icon{font-size:27px}.heroes-record strong{font-size:17px}.heroes-record p{font-size:14px;margin:6px 0;color:#526c7e}.heroes-record small{color:#7b8a90;font-size:12px}@media(min-width:720px){.heroes-page .heroes-gallery{grid-template-columns:repeat(3,minmax(0,1fr));gap:15px}}@media(min-width:1060px){.heroes-page .heroes-gallery{grid-template-columns:repeat(4,minmax(0,1fr))}}@media(max-width:620px){.heroes-controls{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.heroes-controls .heroes-search{grid-column:1 / -1}.heroes-page .heroes-gallery{grid-template-columns:repeat(2,minmax(0,1fr))}.heroes-page{padding-left:2px;padding-right:2px}.heroes-filter-tabs button{flex:1;min-width:44%;padding:9px 7px}.heroes-student-open{min-height:209px}}@media(max-width:350px){.heroes-page .heroes-gallery{gap:7px}.heroes-student h2{font-size:19px}.heroes-student .heroes-badge{font-size:10px}.heroes-student-open{padding:13px 5px}}';
   document.head.appendChild(style);
+  var design=document.createElement('link');
+  design.rel='stylesheet';
+  design.href='./heroes-premium.css?v=1';
+  document.head.appendChild(design);
 }
 function mount(){
   installStyles();
@@ -253,7 +260,7 @@ function mount(){
   document.addEventListener('change',function(event){
     var field=event.target.dataset.acFilter;
     if(!['grade','section'].includes(field))return;
-    heroFilters[field]=event.target.value;visibleCount=8;refreshGridOnly();
+    heroFilters[field]=event.target.value;if(field==='grade')heroFilters.section='all';visibleCount=8;refreshWall();
   });
   var home=document.querySelector('#app .quick-links');
   if(home&&!document.querySelector('.heroes-home'))home.insertAdjacentHTML('beforebegin',cta());
