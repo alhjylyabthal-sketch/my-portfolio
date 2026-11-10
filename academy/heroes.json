@@ -113,6 +113,37 @@
           "approved": true
         }
       ]
+    },
+    {
+      "id": "rinal-1-2",
+      "name": "رينال",
+      "grade": "الصف الأول الابتدائي",
+      "section": "١/٢",
+      "approved": true,
+      "guardianConsent": true,
+      "achievements": [
+        {
+          "skill": "مقارنة الأعداد حتى ١٠",
+          "badge": "وسام الإتقان الذهبي",
+          "category": "إتقان",
+          "date": "",
+          "approved": true
+        },
+        {
+          "skill": "العددان ١١ و١٢",
+          "badge": "وسام الإتقان الذهبي",
+          "category": "إتقان",
+          "date": "",
+          "approved": true
+        },
+        {
+          "skill": "المثابرة والتحسن في تدريبات مقارنة الأعداد حتى ١٠",
+          "badge": "وسام المثابرة",
+          "category": "مثابرة",
+          "date": "",
+          "approved": true
+        }
+      ]
     }
   ]
 }
