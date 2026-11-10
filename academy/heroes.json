@@ -67,7 +67,7 @@
     },
     {
       "id": "mohammed-1-3",
-      "name": "محمد",
+      "name": "محمد عبدالوهاب",
       "grade": "الصف الأول الابتدائي",
       "section": "١/٣",
       "approved": true,
@@ -80,7 +80,8 @@
           "date": "",
           "approved": true
         }
-      ]
+      ],
+      "fullNameConsent": true
     }
   ]
 }
