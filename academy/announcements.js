@@ -24,7 +24,7 @@
       if(!liveNotice)liveNotice=cachedLiveNotice();
     }finally{liveLoading=false}
   }
-  const TODAY_NOTICE={"title":"العددان ١١ و١٢","task":"🌟 تعلّمنا اليوم العددين ١١ و١٢: نعدّ ونقرأ ونكتب ونمثّل كل عدد باستعمال عشر قطع وقطعة أو قطعتين.\n🎮 مغامرة اليوم: امسح الباركود في كتابك، وافتح تحدّي «العددان ١١ و١٢» في الأكاديمية، وأجب عن الأسئلة واجمع النجوم.\n🏡 مهمتي مع أسرتي: كوّن ١٠ مكعبات، ثم أضف مكعبًا واكتب العدد ١١. أضف مكعبًا ثانيًا واكتب العدد ١٢.\n💡 تحدّي العباقرة: يقول بدر «١٠ مكعبات ومكعبان يساوي ١١». هل توافقه؟ فسّر إجابتك.\n⭐ تعلّم واكتشف وأبدع!\nإعداد وتنفيذ: أ. ابتهال الحجيلي","id":"5-1","date":"2026-11-10","url":""};
+  const TODAY_NOTICE={"title":"الأعداد ١٣، ١٤، ١٥","task":"🌟 تعلّمنا اليوم الأعداد ١٣، ١٤، ١٥: نعدّها ونقرأها ونكتبها ونمثّلها.\n🔢 ١٣: عشرة و٣ آحاد.\n🔢 ١٤: عشرة و٤ آحاد.\n🔢 ١٥: عشرة و٥ آحاد.\n🧩 نكوّن مجموعة من ١٠ مكعبات، ثم نضيف ٣ أو ٤ أو ٥ مكعبات.\n🎮 مغامرة اليوم: افتح تحدّي «الأعداد ١٣، ١٤، ١٥» في الأكاديمية واجمع النجوم.\n🏡 مهمتي مع أسرتي: مثّل الأعداد الثلاثة بالمكعبات، واقرأ كل عدد واكتبه.\n💡 سؤال التفكير: لديك ١٠ مكعبات وأضفت إليها ٤، ما العدد الناتج؟ وكيف عرفت؟\nإعداد وتنفيذ: أ. ابتهال الحجيلي","id":"5-2","date":"2026-11-11","url":""};
   const acEscape=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const today=()=>{const d=new Date();return new Date(d.getTime()-d.getTimezoneOffset()*60000).toISOString().slice(0,10)};
   const acRoot=()=>location.href.split('#')[0].split('?')[0];
@@ -63,7 +63,7 @@
       <h3>${acEscape(a.title)}</h3>
       ${lesson?`<div class="academy-notice-course">📗 الفصل ${arabic(lesson.chapter.id)} · صفحة ${arabic(lesson.page)}</div>`:''}
       ${lesson?`<div class="academy-notice-adventure"><span class="academy-adventure-symbol" aria-hidden="true">${lesson.chapter.icon||'🎈'}</span><div class="academy-adventure-copy"><strong>تحدي الرياضيات!</strong><span>العب، تعلّم، واجمع النجوم</span></div><button type="button" class="academy-adventure-play" data-ac-open-lesson="${acEscape(a.id)}">🎮 ابدأ المغامرة</button></div>`:''}
-      <details class="academy-notice-task" ${full?'open':''}><summary>📝 ${full?'مهمتك بعد الدرس':'عرض المهمة المنزلية'}</summary><p>${acEscape(a.task).replace(/\n/g,'<br>')}</p></details>
+      <details class="academy-notice-task" ${full||a.date===today()?'open':''}><summary>📝 ${full?'ملخص الدرس ومهمة الأسرة':'ملخص الدرس ومهمة الأسرة'}</summary><p>${acEscape(a.task).replace(/\n/g,'<br>')}</p></details>
       <div class="academy-notice-actions">
         
         ${a.url?`<a class="academy-notice-secondary" href="${acEscape(a.url)}" target="_blank" rel="noopener noreferrer">${/^https:\/\/(?:www\.)?padlet\.com\//i.test(a.url)?'📸 أشارك حلّي في لوحة الفصل':'🌟 افتح النشاط الإضافي'}</a>`:''}
@@ -73,7 +73,7 @@
   function renderHomeNotice(){
     const a=liveNotice||cachedLiveNotice()||TODAY_NOTICE;
     return `<section class="academy-notice-board" aria-label="إعلانات الفصل">
-      <div class="academy-notice-head"><span class="academy-notice-icon" aria-hidden="true">📣</span><div><span class="academy-notice-overline">لوحة الإعلانات</span><h2>${a&&a.date===today()?'مغامرة اليوم':'آخر مغامرة'}</h2></div></div>
+      <div class="academy-notice-head"><span class="academy-notice-icon" aria-hidden="true">📣</span><div><span class="academy-notice-overline">لوحة الإعلانات</span><h2>${a&&a.date===today()?'تعلّمنا اليوم':'آخر درس'}</h2></div></div>
       ${a?noticeBody(a):`<p class="academy-notice-empty">لا توجد إعلانات جديدة.</p>`}
       <button class="academy-notice-teacher" data-nav="announce-edit">إدارة مغامرة اليوم <span aria-hidden="true">✎</span></button>
     </section>`;
