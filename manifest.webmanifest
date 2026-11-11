@@ -1,27 +1,27 @@
 {
-  "name": "إنجاز | ملفي المهني",
-  "short_name": "إنجاز",
-  "description": "ملف شواهد الأداء الوظيفي للمعلمة ابتهال الحجيلي",
+  "id": "./",
+  "name": "أكاديمية الرياضيات الصغيرة",
+  "short_name": "أكاديمية الرياضيات",
+  "description": "الدخول إلى مغامرات ودروس أكاديمية الرياضيات الصغيرة",
   "lang": "ar",
   "dir": "rtl",
-  "start_url": "./index.html",
-  "scope": "./index.html",
+  "start_url": "./",
+  "scope": "./",
   "display": "standalone",
-  "background_color": "#fff9f5",
-  "theme_color": "#00655e",
+  "background_color": "#fffaf1",
+  "theme_color": "#fff1df",
   "icons": [
     {
-      "src": "icon-192.png",
+      "src": "./academy/academy-icon.svg",
+      "type": "image/svg+xml",
       "sizes": "192x192",
-      "type": "image/png",
       "purpose": "any maskable"
     },
     {
-      "src": "icon-512.png",
+      "src": "./academy/academy-icon.svg",
+      "type": "image/svg+xml",
       "sizes": "512x512",
-      "type": "image/png",
       "purpose": "any maskable"
     }
-  ],
-  "id": "./"
+  ]
 }
