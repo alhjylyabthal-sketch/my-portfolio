@@ -12,22 +12,16 @@
   "theme_color": "#fff1df",
   "icons": [
     {
-      "src": "./academy-icon.svg",
-      "type": "image/svg+xml",
+      "src": "./assets/academy-approved-192.png",
       "sizes": "192x192",
-      "purpose": "any maskable"
+      "type": "image/png",
+      "purpose": "any"
     },
     {
-      "src": "./academy-icon.svg",
-      "type": "image/svg+xml",
+      "src": "./assets/academy-approved-512.png",
       "sizes": "512x512",
-      "purpose": "any maskable"
-    },
-    {
-      "src": "./academy-icon.svg",
-      "type": "image/svg+xml",
-      "sizes": "any",
-      "purpose": "any maskable"
+      "type": "image/png",
+      "purpose": "any"
     }
   ]
 }
