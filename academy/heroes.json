@@ -419,6 +419,79 @@
           "approved": true
         }
       ]
+    },
+    {
+      "id": "sereen-1-1",
+      "name": "سيرين",
+      "grade": "الصف الأول الابتدائي",
+      "section": "١/١",
+      "approved": true,
+      "guardianConsent": true,
+      "achievements": [
+        {
+          "skill": "حل المسألة: أرسم صورة",
+          "badge": "وسام الإتقان الذهبي",
+          "category": "إتقان",
+          "date": "",
+          "approved": true
+        },
+        {
+          "skill": "قراءة العددين ٤ و٥ وكتابتهما",
+          "badge": "وسام الإتقان الذهبي",
+          "category": "إتقان",
+          "date": "",
+          "approved": true
+        },
+        {
+          "skill": "قراءة الأعداد ٦ و٧ و٨ وكتابتها",
+          "badge": "وسام الإتقان الذهبي",
+          "category": "إتقان",
+          "date": "",
+          "approved": true
+        },
+        {
+          "skill": "العددان ٩ و١٠",
+          "badge": "وسام الإتقان الذهبي",
+          "category": "إتقان",
+          "date": "",
+          "approved": true
+        },
+        {
+          "skill": "يساوي",
+          "badge": "وسام الإتقان الذهبي",
+          "category": "إتقان",
+          "date": "",
+          "approved": true
+        },
+        {
+          "skill": "حل المسألة: أمثلها",
+          "badge": "وسام الإتقان الذهبي",
+          "category": "إتقان",
+          "date": "",
+          "approved": true
+        },
+        {
+          "skill": "تمثيل الجمع",
+          "badge": "وسام الإتقان الذهبي",
+          "category": "إتقان",
+          "date": "",
+          "approved": true
+        },
+        {
+          "skill": "مراجعات الفصول واختباراتها",
+          "badge": "وسام الإتقان الذهبي",
+          "category": "إتقان",
+          "date": "",
+          "approved": true
+        },
+        {
+          "skill": "أكثر من، أقل من",
+          "badge": "وسام الإنجاز",
+          "category": "تميز",
+          "date": "",
+          "approved": true
+        }
+      ]
     }
   ]
 }
