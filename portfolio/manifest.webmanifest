@@ -1,11 +1,11 @@
 {
-  "name": "إنجاز | ملفي المهني",
-  "short_name": "إنجاز",
+  "name": "ملف الإنجاز المهني | ابتهال الحجيلي",
+  "short_name": "إنجاز ابتهال",
   "description": "ملف شواهد الأداء الوظيفي للمعلمة ابتهال الحجيلي",
   "lang": "ar",
   "dir": "rtl",
-  "start_url": "./index.html",
-  "scope": "./",
+  "start_url": "/my-portfolio/portfolio/index.html",
+  "scope": "/my-portfolio/portfolio/",
   "display": "standalone",
   "background_color": "#fff9f5",
   "theme_color": "#00655e",
@@ -23,5 +23,5 @@
       "purpose": "any maskable"
     }
   ],
-  "id": "./"
+  "id": "/my-portfolio/portfolio/ibtihal-enjaz-app"
 }
