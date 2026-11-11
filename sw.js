@@ -1,18 +1,24 @@
-// Enjaz: local shell only; never cache private Supabase/auth responses.
-const CACHE_NAME='engaz-shell-v10';
-const SHELL=['./','./index.html','./cloud.js','./luxury-ui.css','./luxury-ui.js','./luxury-ornaments.svg','./approved-ornaments.webp','./approved-school-logo.webp','./final-cover.css','./final-cover.js','./manifest.webmanifest','./icon-192.png','./icon-512.png'];
-self.addEventListener('install',event=>{
-  event.waitUntil(caches.open(CACHE_NAME).then(cache=>cache.addAll(SHELL)).then(()=>self.skipWaiting()));
+// Route the public project home to the math academy. Portfolio kept separately.
+const ROOT = new URL('./', self.registration.scope);
+const ACADEMY = new URL('academy/', ROOT);
+function isHome(url) {
+  return url.origin === ROOT.origin && (url.pathname === ROOT.pathname || url.pathname === ROOT.pathname + 'index.html');
+}
+self.addEventListener('install', event => {
+  event.waitUntil(self.skipWaiting());
 });
-self.addEventListener('activate',event=>{
-  event.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k.startsWith('engaz-shell-')&&k!==CACHE_NAME).map(k=>caches.delete(k)))).then(()=>self.clients.claim()));
+self.addEventListener('activate', event => {
+  event.waitUntil((async () => {
+    const names = await caches.keys();
+    await Promise.all(names.filter(name => name.startsWith('engaz-shell-')).map(name => caches.delete(name)));
+    await self.clients.claim();
+    // Move already opened/installable legacy home clients away from the private portfolio.
+    const clients = await self.clients.matchAll({type:'window',includeUncontrolled:true});
+    await Promise.all(clients.filter(c=>{try{return isHome(new URL(c.url))}catch{return false}}).map(c=>c.navigate(ACADEMY.href).catch(()=>{})));
+  })());
 });
-self.addEventListener('fetch',event=>{
-  const url=new URL(event.request.url);
-  if(event.request.method!=='GET'||url.origin!==self.location.origin)return;
-  if(!SHELL.some(path=>new URL(path,self.registration.scope).pathname===url.pathname))return;
-  event.respondWith(fetch(event.request).then(response=>{
-    if(response.ok){const cloned=response.clone();caches.open(CACHE_NAME).then(c=>c.put(event.request,cloned));}
-    return response;
-  }).catch(()=>caches.match(event.request)));
+self.addEventListener('fetch', event => {
+  if (event.request.method === 'GET' && event.request.mode === 'navigate' && isHome(new URL(event.request.url))) {
+    event.respondWith(Response.redirect(ACADEMY.href, 302));
+  }
 });
