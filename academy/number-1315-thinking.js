@@ -154,6 +154,8 @@ document.addEventListener('click',function(e){
  if(b.hasAttribute('data-n13-game')){pageMode='games';oldStart(lessonCode);return;}
  if(b.hasAttribute('data-ac-open-learning')){stage=0;answered=false;correct=false;target=14;parts=[];pageMode='lessons';navigate('learn/5-2');return;}
 });
+window.addEventListener('hashchange',function(){if(/^#\/?learn\/5-2$/.test(location.hash||''))render();});
+if(/^#\/?learn\/5-2$/.test(location.hash||''))document.addEventListener('DOMContentLoaded',function(){render();},{once:true});
 var style=document.createElement('style');
 style.id='n13-thinking-style';
 style.textContent=[
