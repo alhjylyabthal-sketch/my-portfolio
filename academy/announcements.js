@@ -65,7 +65,7 @@
       ${lesson?`<div class="academy-notice-adventure"><span class="academy-adventure-symbol" aria-hidden="true">${lesson.chapter.icon||'🎈'}</span><div class="academy-adventure-copy"><strong>تحدي الرياضيات!</strong><span>العب، تعلّم، واجمع النجوم</span></div><button type="button" class="academy-adventure-play" data-ac-open-lesson="${acEscape(a.id)}">🎮 ابدأ المغامرة</button></div>`:''}
       <details class="academy-notice-task" ${full||a.date===today()?'open':''}><summary>📝 ${full?'ملخص الدرس ومهمة الأسرة':'ملخص الدرس ومهمة الأسرة'}</summary><p>${acEscape(a.task).replace(/\n/g,'<br>')}</p></details>
       <div class="academy-notice-actions">
-        
+        ${lesson&&lesson.code==='5-2'?`<button type="button" class="academy-notice-secondary" data-ac-open-learning="5-2">📖 أكتشف درس الأعداد ١٣، ١٤، ١٥</button>`:''}
         ${a.url?`<a class="academy-notice-secondary" href="${acEscape(a.url)}" target="_blank" rel="noopener noreferrer">${/^https:\/\/(?:www\.)?padlet\.com\//i.test(a.url)?'📸 أشارك حلّي في لوحة الفصل':'🌟 افتح النشاط الإضافي'}</a>`:''}
         ${full?`<button class="academy-notice-secondary" data-ac-share-notice="1">📤 مشاركة الإعلان</button>`:''}
       </div></div>`;
