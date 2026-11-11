@@ -1,0 +1,58 @@
+name: تثبيت هوية أيقونة الأكاديمية المعتمدة
+on:
+  push:
+    paths:
+      - '.github/workflows/apply-approved-academy-icon.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  apply-academy-icon:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Prepare Academy icons while preserving lessons and links
+        run: |
+          python3 -m pip install --quiet pillow
+          python3 - <<'PY'
+          import json,pathlib,re
+          from PIL import Image,ImageFilter
+          folder=pathlib.Path('academy')
+          source=folder/'assets/academy-approved-source.webp'
+          assert source.exists(), 'Approved Academy artwork is absent'
+          artwork=Image.open(source).convert('RGB')
+          for size in (192,512):
+              image=artwork.resize((size,size),Image.Resampling.LANCZOS).filter(ImageFilter.UnsharpMask(radius=1.2,percent=95))
+              image.save(folder/f'assets/academy-approved-{size}.png',format='PNG',optimize=True)
+          p=folder/'academy-manifest.webmanifest'
+          doc=json.loads(p.read_text(encoding='utf-8'))
+          assert doc.get('id')=='./', 'Preserve Academy installed app identity'
+          doc['icons']=[{'src':f'./assets/academy-approved-{size}.png','sizes':f'{size}x{size}','type':'image/png','purpose':'any'} for size in (192,512)]
+          p.write_text(json.dumps(doc,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          page=folder/'index.html'
+          html=page.read_text(encoding='utf-8')
+          html=html.replace('href="./academy-manifest.webmanifest"','href="./academy-manifest.webmanifest?v=approved-icon-2"')
+          html=html.replace('href="./academy-icon.svg"','href="./assets/academy-approved-192.png?v=2"')
+          html=re.sub(r'<link rel="icon" href="data:image/webp;base64,[^"]+">','<link rel="icon" type="image/png" href="./assets/academy-approved-192.png?v=2">',html,count=1)
+          page.write_text(html,encoding='utf-8')
+          sw=folder/'academy-sw.js'
+          script=sw.read_text(encoding='utf-8')
+          script=script.replace("little-math-academy-shell-v21","little-math-academy-shell-v22")
+          script=script.replace("'./academy-icon.svg'","'./academy-icon.svg','./assets/academy-approved-192.png','./assets/academy-approved-512.png'")
+          sw.write_text(script,encoding='utf-8')
+          root=pathlib.Path('manifest.webmanifest')
+          manifest=json.loads(root.read_text(encoding='utf-8'))
+          assert manifest.get('id')=='./', 'Preserve printed QR linked app identity'
+          manifest['icons']=[{'src':f'./academy/assets/academy-approved-{size}.png','sizes':f'{size}x{size}','type':'image/png','purpose':'any'} for size in (192,512)]
+          root.write_text(json.dumps(manifest,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          assert 'academy-approved-192.png' in html
+          PY
+      - name: Commit only Academy icon updates
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add academy/assets/academy-approved-192.png academy/assets/academy-approved-512.png academy/academy-manifest.webmanifest academy/index.html academy/academy-sw.js manifest.webmanifest
+          if ! git diff --cached --quiet; then
+            git commit -m "Publish approved Academy children icon without changing student URL"
+            git push
+          fi
