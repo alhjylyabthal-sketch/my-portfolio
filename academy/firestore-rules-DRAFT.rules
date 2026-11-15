@@ -1,0 +1,41 @@
+// مسودة للاختبار فقط — لا تُنشر قبل اختبار المحاكي
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function teacher() {
+      return request.auth != null && request.auth.uid == 'LjIzYFYtuEX78JkDkHvAt8ljMBh1';
+    }
+    function testStudent(uid) {
+      return request.auth != null &&
+        request.auth.uid == uid &&
+        uid == 'pn7gpfwoeVOi1Q6pFA6gHS8lHmt2';
+    }
+    match /studentResults/{uid}/attempts/{attemptId} {
+      allow get, list: if teacher() || testStudent(uid);
+      allow create: if testStudent(uid)
+        && request.resource.data.keys().hasOnly(['lesson','title','chapter','score','correct','total','completedAt'])
+        && request.resource.data.keys().hasAll(['lesson','title','chapter','score','correct','total','completedAt'])
+        && request.resource.data.lesson is string
+        && request.resource.data.lesson.size() <= 64
+        && request.resource.data.title is string
+        && request.resource.data.title.size() <= 160
+        && request.resource.data.chapter is int
+        && request.resource.data.chapter >= 1
+        && request.resource.data.chapter <= 20
+        && request.resource.data.score is int
+        && request.resource.data.score >= 0
+        && request.resource.data.score <= 100
+        && request.resource.data.correct is int
+        && request.resource.data.total is int
+        && request.resource.data.total >= 1
+        && request.resource.data.total <= 50
+        && request.resource.data.correct >= 0
+        && request.resource.data.correct <= request.resource.data.total
+        && request.resource.data.completedAt == request.time;
+      allow update, delete: if false;
+    }
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
