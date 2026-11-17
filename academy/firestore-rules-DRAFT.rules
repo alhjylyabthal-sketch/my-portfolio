@@ -31,7 +31,8 @@ service cloud.firestore {
         && request.resource.data.total <= 50
         && request.resource.data.correct >= 0
         && request.resource.data.correct <= request.resource.data.total
-        && request.resource.data.score == (request.resource.data.correct * 100 / request.resource.data.total)\n        && request.resource.data.completedAt == request.time;
+        && request.resource.data.score == (request.resource.data.correct * 100 / request.resource.data.total)
+        && request.resource.data.completedAt == request.time;
       allow update, delete: if false;
     }
     match /{document=**} {
