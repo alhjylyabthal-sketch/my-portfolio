@@ -10,7 +10,7 @@ var chapters={
 2:{name:'قطار الأعداد',emoji:'🚂',sub:'أعدّ وأتعلّم',mode:'train',sample:'2-1'},
 3:{name:'مدينة الأنماط',emoji:'🌈',sub:'اكتشف النمط',mode:'stars',sample:'3-4'},
 4:{name:'مغامرة الأعداد',emoji:'🎈',sub:'حتى العدد ١٠',mode:'balloons',sample:'4-6'},
-5:{name:'كنز العشرين',emoji:'🗝️',sub:'حتى العدد ٢٠',mode:'treasure',sample:'5-6'},
+5:{name:'كنز العشرين',emoji:'🗝️',sub:'حتى العدد ٢٠',mode:'treasure',sample:'5-4'},
 6:{name:'مهرجان الجمع',emoji:'🧺',sub:'هيا نجمع',mode:'garden',sample:'6-1'}
 };
 function character(who){
@@ -105,7 +105,7 @@ var steps=Array.from({length:s.questions.length},function(_,i){
 return '<span class="'+(i<s.index?'done':i===s.index?'now':'')+'" aria-hidden="true">'+(i<s.index?'★':i===s.index?'✦':'•')+'</span>';
 }).join('');
 var scene='<div class="play-scene">'+character(buddy)+'<div><button type="button" class="buddy-game-change" data-change-buddy="1">🎨 تغيير رفيقي</button><small>المرحلة '+arabic(s.index+1)+' من '+arabic(s.questions.length)+'</small>'
-+'<h2>'+w.name+'</h2><div class="play-steps">'+steps+'</div></div></div>';
++'<h2>'+(s.lesson.code==='5-4'?'مغامرة البحث عن نمط':w.name)+'</h2><div class="play-steps">'+steps+'</div></div></div>';
 html=html.replace('<section class="practice-card">','<section class="practice-card playgame w'+ch+' mode-'+mode+'">'+scene);
 if(sequence){html=html.replace(/<div class="options"[\s\S]*?<\/div>\s*(?=<div class="quiz-footer">|<div class="feedback)/,'');}
 if(count)html=html.replace('<div class="options"','<div class="tap-counter" aria-live="polite">المعدود: <span data-tapped-count>٠</span></div><div class="options"');
