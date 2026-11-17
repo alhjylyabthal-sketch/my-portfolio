@@ -465,9 +465,24 @@ function generate(skill,i){const seed=i+5;
     choices,'يأتي اللون '+colorNames[answer]+' بعد تكرار النمط.',seed);
  }
  if(skill==='pattern20'){
-  const start=11+(i%3),step=i%2?2:1,answer=start+step*3;
-  return numQ('أي عدد يكمل النمط؟',visualSequence([start,start+step,start+step*2,'؟']),answer,11,20,seed,
-    'نزيد '+arabic(step)+' في كل خطوة.');
+  const mode=i%6;
+  if(mode===0){const start=11+(Math.floor(i/6)%5),answer=start+3;
+   return numQ('أكمل النمط، ثم فكّر: ما القاعدة؟',visualSequence([start,start+1,start+2,'؟']),answer,11,20,seed,'القاعدة: نزيد واحدًا في كل مرة.');
+  }
+  if(mode===1){const start=11+(Math.floor(i/6)%3),answer=start+6;
+   return numQ('ما العدد التالي إذا زدنا اثنين في كل خطوة؟',visualSequence([start,start+2,start+4,'؟']),answer,11,20,seed,'نزيد اثنين في كل خطوة.');
+  }
+  if(mode===2){const start=17+(Math.floor(i/6)%3),answer=start-3;
+   return numQ('اكتشف قاعدة النمط وأكمله.',visualSequence([start,start-1,start-2,'؟']),answer,11,20,seed,'القاعدة: ننقص واحدًا في كل مرة.');
+  }
+  if(mode===3){const start=12+(Math.floor(i/6)%3),answer=start+2;
+   return numQ('أي عدد مفقود في هذا النمط؟',visualSequence([start,start+1,'؟',start+3]),answer,11,20,seed,'العدد المفقود يزيد واحدًا عن العدد الذي قبله.');
+  }
+  if(mode===4){const start=11+(Math.floor(i/6)%3),answer=start+2;
+   return numQ('بدر يزيد واحدًا كل مرة. أي عدد كتبه خطأ؟',visualSequence([start,start+1,start+3,start+3]),start+3,11,20,seed,'بعد '+arabic(start+1)+' يجب أن يأتي '+arabic(answer)+'؛ فالعدد '+arabic(start+3)+' في الموضع الثالث خطأ.');
+  }
+  const start=12+(Math.floor(i/6)%3);
+  return numQ('لولو تقفز قفزتين في كل مرة. ما العدد الذي تصل إليه؟',visualSequence([start,start+2,start+4,'؟']),start+6,11,20,seed,'نزيد اثنين في كل قفزة، ونشرح كيف اكتشفنا القاعدة.');
  }
  if(skill==='compare10'||skill==='compare20'){
   const max=skill==='compare10'?10:20,a=chooseNumber(2,max-1,i*3+1),mode=i%5;
