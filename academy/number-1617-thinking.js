@@ -32,3 +32,35 @@ questionsFor=function(lesson,count){
  return banks[attempt%banks.length].map(x=>({...x,choices:x.choices.map(c=>({...c}))}));
 };
 })();
+
+/* مغامرة الأعداد ١٨–٢٠: أنشطة متنوعة ومتجددة */
+(function(){
+'use strict';
+const old=questionsFor;
+const a=arabic;
+const frames=(n)=>'<div class="count-container">'+tenFrame(10)+tenFrame(n-10)+'</div>';
+const seq=(xs)=>'<div class="numbers-strip" dir="rtl">'+xs.map(x=>'<span>'+x+'</span>').join('')+'</div>';
+const q=(p,v,opts,k,e,i)=>makeQuestion(p,v,opts.map((x,j)=>strChoice(x,j===k)),e,i);
+function bank(t){
+const n=18+t%3, m=18+(t+1)%3, k=n===20?19:n+1;
+return [
+q('🔎 المحقق الصغير: أي بطاقة لا تطابق الرسم؟',frames(n),[a(n),(n===20?'عشرتان':'عشرة و'+a(n-10)+' آحاد'),'العدد '+a(m)],2,'الرسم يمثل '+a(n)+'، وليس '+a(m)+'.',t),
+q('🔐 الشفرة السرية: أنا أكبر من ١٧ وأصغر من ١٩. من أنا؟',seq(['١٧','؟','١٩']),['١٩','١٨','٢٠'],1,'العدد بين ١٧ و١٩ هو ١٨.',t+1),
+q('🧱 مهندس المكعبات: أي نموذج يمثّل العدد '+a(n)+'؟',frameText(a(n)),[18,19,20].map(x=>x===20?'عشرتان':'عشرة و'+a(x-10)+' آحاد'),n-18,n===20?'٢٠ يتكون من عشرتين ولا آحاد.':'عشرة و'+a(n-10)+' آحاد تكون '+a(n)+'.',t+2),
+q('🎁 صندوق المفاجآت: في الصندوق '+a(k===19?18:19)+' قطعة. أضفنا قطعة واحدة. كم أصبح فيه؟',frames(k===19?18:19),['١٨','١٩','٢٠'],k===19?1:2,'عند إضافة قطعة واحدة ننتقل إلى العدد التالي.',t+3),
+q('🚦 أي بطاقة يجب أن تكون في المكان الثالث بدلًا من ٢٠؟',seq(['١٧','١٨','٢٠','١٩']),['١٧','١٨','١٩'],2,'بعد ١٨ يأتي ١٩، ثم ٢٠.',t+4),
+q('🎨 اختر رسمًا يمثّل العدد ٢٠.',frameText('٢٠'),['عشرة و٨ آحاد','عشرة و٩ آحاد','إطاران ممتلئان، في كل إطار ١٠'],2,'عشرة وعشرة تساوي ٢٠.',t+5)
+];
+}
+questionsFor=function(lesson,count){
+if(!lesson||lesson.code!=='5-5'||lesson.testType)return old(lesson,count);
+const t=Number(progress['5-5']?.attempts||0);
+const list=bank(t);
+if(t%2===1){
+list[1]=q('🔐 من أنا؟ أنا العدد الذي يلي ١٩ مباشرة.',seq(['١٨','١٩','؟']),['١٨','٢٠','١٩'],1,'بعد ١٩ يأتي ٢٠.',t+6);
+list[4]=q('🚂 أي بطاقة تكمل القطار؟',seq(['٢٠','؟','١٨']),['١٧','١٩','٢٠'],1,'عند العد التنازلي: ٢٠، ١٩، ١٨.',t+7);
+}
+if(list.some(x=>x.choices.filter(c=>c.correct).length!==1))throw Error('Invalid lesson');
+return list.slice(t%6).concat(list.slice(0,t%6));
+};
+})();
