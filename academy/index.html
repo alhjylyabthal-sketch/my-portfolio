@@ -586,6 +586,7 @@ function saveResult(s){const id=s.lesson.code,score=Math.round(s.score/s.questio
  progress[id]={best:Math.max(old.best||0,score),attempts:(old.attempts||0)+1,last:score,updated:attempt.date};
  if(!Array.isArray(progress.history))progress.history=[];progress.history.push(attempt);progress.history=progress.history.slice(-200);
  try{localStorage.setItem(storedKey,JSON.stringify(progress))}catch{showToast('تعذر حفظ التقدم على هذا الجهاز')}
+ window.dispatchEvent(new CustomEvent('academy:result',{detail:attempt}));
 }
 function renderResult(s){if(!s.saved){saveResult(s);s.saved=true;}const percent=Math.round(s.score/s.questions.length*100);
 return `<section class="result-card"><div class="result-icon">${percent===100?'🏆':percent>=70?'🌟':'🌱'}</div>
@@ -662,5 +663,5 @@ if('serviceWorker' in navigator){
  });
 }
 </script>
-<script type="module" src="./tracking-ui.js?v=3"></script>\n</body>
+<script type="module" src="./tracking-ui.js?v=4"></script>\n</body>
 </html>
