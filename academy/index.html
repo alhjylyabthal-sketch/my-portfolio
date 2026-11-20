@@ -659,9 +659,9 @@ window.addEventListener('DOMContentLoaded',()=>{render();});
 <script>
 if('serviceWorker' in navigator){
  window.addEventListener('load',()=>{
-  navigator.serviceWorker.register('./academy-sw.js',{scope:'./'}).catch(()=>{});
+  navigator.serviceWorker.register('./academy-sw.js?v=28',{scope:'./'}).catch(()=>{});
  });
 }
 </script>
-<script type="module" src="./tracking-ui.js?v=4"></script>\n</body>
+<script type="module" src="./tracking-ui.js?v=5"></script>\n</body>
 </html>
